@@ -7,7 +7,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import React from "react";
-import { MdContentCopy } from "react-icons/md";
+import { MdContentCopy, MdOutlineKeyboardAlt } from "react-icons/md";
 import "@fontsource/noto-sans-cham";
 import "@fontsource/noto-sans-tagalog";
 import "@fontsource/noto-sans-buhid";
@@ -38,6 +38,7 @@ export const TransliterateInput = ({
   isLatinInput,
   standardLatin,
   inputElementRef,
+  handleShowKeyboard,
   ...props
 }) => {
   const fontFamily = getFont;
@@ -77,6 +78,11 @@ export const TransliterateInput = ({
               {...props}
             />
             <HStack justify="space-between">
+              <IconButton
+                onClick={handleShowKeyboard}
+                variant="ghost"
+                icon={<MdOutlineKeyboardAlt />}
+              />
               <Text fontSize="sm" textColor="gray.300">
                 {""}
               </Text>

@@ -1,6 +1,5 @@
 import { GridItem, Button, Box } from "@chakra-ui/react";
 import React from "react";
-import { FaBookOpen, FaPencilAlt } from "react-icons/fa";
 
 export const KeyboardItem = ({ name, value, span, onClick }) => {
   return (

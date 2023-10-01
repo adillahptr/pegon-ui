@@ -51,7 +51,6 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
       inputElementRef.current.selectionEnd = selectionStart + 1;
     }
     else {
-      const inputElement = document.getElementById('translit-textarea');
       const { selectionStart, selectionEnd, value } = inputElementRef.current
       inputElementRef.current.value = value.substring(0, selectionStart) + event.target.innerText + value.substring(selectionEnd);
       setInputText(inputElementRef.current.value)

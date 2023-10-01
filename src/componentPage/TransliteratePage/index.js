@@ -164,6 +164,11 @@ const TransliteratePage = () => {
     () => usePegonIndonesianTransliterator,
   );
   const inputElementRef = useRef();
+  const [showKeyboard, setShowKeyboard] = useState(false);
+
+  const handleShowKeyboard = (event) => {
+    setShowKeyboard(showKeyboard => !showKeyboard)
+  };
 
   const handleScriptChange = (event) => {
     const newScript = event.target.innerText;
@@ -302,6 +307,7 @@ const TransliteratePage = () => {
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? standardLatin : null}
                   inputElementRef={inputElementRef}
+                  handleShowKeyboard={handleShowKeyboard}
                 />
                 <TransliterateInput
                   placeholder="Transliteration result"
@@ -315,10 +321,12 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? null : standardLatin}
+                  handleShowKeyboard={handleShowKeyboard}
                 />
               </Stack>
             </Card>
           </VStack>
+          {showKeyboard?
           <VStack
             px={10}
             p={5}
@@ -331,7 +339,8 @@ const TransliteratePage = () => {
               setInputText={setInputText}
               inputElementRef={inputElementRef}
             />
-          </VStack>
+          </VStack> : null
+          }
         </VStack>
       </AppLayout>
     </>
