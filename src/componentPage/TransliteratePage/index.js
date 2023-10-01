@@ -10,6 +10,8 @@ import {
   Stack,
   Divider,
   useDisclosure,
+  Container,
+  Center,
 } from "@chakra-ui/react";
 import { ScriptTypeSelect } from "./Fragments/ScriptTypeSelect";
 import { VariantSelect } from "./Fragments/VariantSelect";
@@ -316,6 +318,14 @@ const TransliteratePage = () => {
                 />
               </Stack>
             </Card>
+          </VStack>
+          <VStack
+            px={10}
+            p={5}
+            spacing={0}
+            w="100%"
+            h="100%"
+          >
             <PegonKeyboard
               inputText={inputText}
               setInputText={setInputText}

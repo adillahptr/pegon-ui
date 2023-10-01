@@ -25,6 +25,7 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
     else if (key === "Space") {
       const { selectionStart, selectionEnd, value } = inputElementRef.current
       inputElementRef.current.value = value.substring(0, selectionStart) + ' ' + value.substring(selectionEnd);
+      setInputText(inputElementRef.current.value)
       inputElementRef.current.selectionStart = selectionStart + 1;
       inputElementRef.current.selectionEnd = selectionStart + 1;
 
@@ -38,12 +39,14 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
         newValue = value.substring(0, selectionStart - 1) + value.substring(selectionStart);
       }
       inputElementRef.current.value = newValue;
+      setInputText(inputElementRef.current.value)
       inputElementRef.current.selectionStart = selectionStart > 0 ? selectionStart - 1 : selectionStart;
       inputElementRef.current.selectionEnd = inputElementRef.current.selectionStart;
     }
     else if (key === "Enter") {
       const { selectionStart, selectionEnd, value } = inputElementRef.current
       inputElementRef.current.value = value.substring(0, selectionStart) + '\n' + value.substring(selectionEnd);
+      setInputText(inputElementRef.current.value)
       inputElementRef.current.selectionStart = selectionStart + 1;
       inputElementRef.current.selectionEnd = selectionStart + 1;
     }
@@ -51,6 +54,7 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
       const inputElement = document.getElementById('translit-textarea');
       const { selectionStart, selectionEnd, value } = inputElementRef.current
       inputElementRef.current.value = value.substring(0, selectionStart) + event.target.innerText + value.substring(selectionEnd);
+      setInputText(inputElementRef.current.value)
       inputElementRef.current.selectionStart = selectionStart + 1;
       inputElementRef.current.selectionEnd = selectionStart + 1;
     }
@@ -58,18 +62,22 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
   }
 
   return (
-    <Center bg="gray.700" p="10px">
-    <Grid templateColumns="repeat(10, 1fr)" templateRows="repeat(5, 1fr)" gap={1}>
-      {level.map((item, index) => {
-        return (
-          <KeyboardItem
-            key={index}
-            {...item}
-            onClick={handleKeyClick}
-          />
-        );
-      })}
-    </Grid>
+    <Center bg="gray.700" p={2}>
+      <Grid templateColumns="repeat(10, 1fr)" 
+        templateRows="repeat(5, 1fr)" 
+        gap={1} 
+        w="100%"
+      >
+        {level.map((item, index) => {
+          return (
+            <KeyboardItem
+              key={index}
+              {...item}
+              onClick={handleKeyClick}
+            />
+          );
+        })}
+      </Grid>
     </Center>
   );
 };
