@@ -37,6 +37,7 @@ export const TransliterateInput = ({
   variant,
   isLatinInput,
   standardLatin,
+  inputElementRef,
   ...props
 }) => {
   const fontFamily = getFont;
@@ -54,6 +55,7 @@ export const TransliterateInput = ({
               resize="none"
               borderWidth={0}
               height="100%"
+              ref={inputElementRef}
               focusBorderColor="transparent"
               // make scrollbar translucent
               sx={{
@@ -98,6 +100,7 @@ export const TransliterateInput = ({
               resize="none"
               borderWidth={0}
               height="100%"
+              ref={inputElementRef}
               focusBorderColor="transparent"
               // make scrollbar translucent
               sx={{

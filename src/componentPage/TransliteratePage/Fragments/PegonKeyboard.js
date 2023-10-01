@@ -7,8 +7,9 @@ import {
 } from "src/utils/pegonKeyboardKeys";
 import { KeyboardItem } from "./KeyboardItem";
 
-export const PegonKeyboard = ({ inputText, setInputText }) => {
+export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
   const [level, setLevel] = useState(pegonKeyboardLevel1);
+  var inputElement = document.querySelector("TextArea[aria-readonly='false']")
 
   const handleKeyClick = (event) => {
     var key = event.target.name
@@ -21,7 +22,39 @@ export const PegonKeyboard = ({ inputText, setInputText }) => {
     else if (key === "Level1") {
       setLevel(pegonKeyboardLevel1)
     }
-    
+    else if (key === "Space") {
+      const { selectionStart, selectionEnd, value } = inputElementRef.current
+      inputElementRef.current.value = value.substring(0, selectionStart) + ' ' + value.substring(selectionEnd);
+      inputElementRef.current.selectionStart = selectionStart + 1;
+      inputElementRef.current.selectionEnd = selectionStart + 1;
+
+    }
+    else if (key === "BackSpace") {
+      const { selectionStart, selectionEnd, value } = inputElementRef.current;
+      let newValue;
+      if (selectionStart !== selectionEnd) {
+        newValue = value.substring(0, selectionStart) + value.substring(selectionEnd);
+      } else {
+        newValue = value.substring(0, selectionStart - 1) + value.substring(selectionStart);
+      }
+      inputElementRef.current.value = newValue;
+      inputElementRef.current.selectionStart = selectionStart > 0 ? selectionStart - 1 : selectionStart;
+      inputElementRef.current.selectionEnd = inputElementRef.current.selectionStart;
+    }
+    else if (key === "Enter") {
+      const { selectionStart, selectionEnd, value } = inputElementRef.current
+      inputElementRef.current.value = value.substring(0, selectionStart) + '\n' + value.substring(selectionEnd);
+      inputElementRef.current.selectionStart = selectionStart + 1;
+      inputElementRef.current.selectionEnd = selectionStart + 1;
+    }
+    else {
+      const inputElement = document.getElementById('translit-textarea');
+      const { selectionStart, selectionEnd, value } = inputElementRef.current
+      inputElementRef.current.value = value.substring(0, selectionStart) + event.target.innerText + value.substring(selectionEnd);
+      inputElementRef.current.selectionStart = selectionStart + 1;
+      inputElementRef.current.selectionEnd = selectionStart + 1;
+    }
+    inputElementRef.current.focus()
   }
 
   return (

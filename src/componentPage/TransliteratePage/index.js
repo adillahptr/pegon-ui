@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AppLayout from "../Page/AppLayout";
 import Head from "next/head";
 import {
@@ -161,6 +161,7 @@ const TransliteratePage = () => {
   const [transliterateHook, setTransliterateHook] = useState(
     () => usePegonIndonesianTransliterator,
   );
+  const inputElementRef = useRef();
 
   const handleScriptChange = (event) => {
     const newScript = event.target.innerText;
@@ -298,6 +299,7 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? standardLatin : null}
+                  inputElementRef={inputElementRef}
                 />
                 <TransliterateInput
                   placeholder="Transliteration result"
@@ -317,6 +319,7 @@ const TransliteratePage = () => {
             <PegonKeyboard
               inputText={inputText}
               setInputText={setInputText}
+              inputElementRef={inputElementRef}
             />
           </VStack>
         </VStack>
