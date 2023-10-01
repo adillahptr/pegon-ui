@@ -17,6 +17,7 @@ import { TransliterateInput } from "./Fragments/TransliterateInput";
 import { TransliterationHeader } from "./Fragments/TransliterationHeader";
 import { FaInfo } from "react-icons/fa";
 import { CheatSheetDrawer } from "./Fragments/CheatSheetDrawer";
+import { PegonKeyboard } from "./Fragments/PegonKeyboard";
 import { scriptsData } from "src/utils/objects";
 
 import {
@@ -313,6 +314,10 @@ const TransliteratePage = () => {
                 />
               </Stack>
             </Card>
+            <PegonKeyboard
+              inputText={inputText}
+              setInputText={setInputText}
+            />
           </VStack>
         </VStack>
       </AppLayout>
