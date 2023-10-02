@@ -328,6 +328,7 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? null : standardLatin}
+                  hasKeyboard={hasKeyboard}
                   handleShowKeyboard={handleShowKeyboard}
                 />
               </Stack>

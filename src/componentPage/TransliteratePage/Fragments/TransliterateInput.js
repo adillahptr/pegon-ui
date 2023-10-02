@@ -79,7 +79,7 @@ export const TransliterateInput = ({
               {...props}
             />
             <HStack justify="space-between">
-              {hasKeyboard
+              {!isLatinInput && hasKeyboard
               ? <IconButton
                 onClick={handleShowKeyboard}
                 variant="ghost"
