@@ -3,8 +3,8 @@ import React from "react";
 
 export const KeyboardItem = ({ name, value, span, onClick }) => {
   return (
-    <GridItem colSpan={span}>
-      <Button colorScheme='teal' w='100%' borderRadius='3px' onClick={onClick} name={name}>{value}</Button>
+    <GridItem bg="gray.700"  p={1} colSpan={span} h="100%">
+      <Box as='button' bg='teal' _hover={{ bg: "teal.700" }} w='100%' h="100%" borderRadius='3px' onClick={onClick} name={name}>{value}</Box>
     </GridItem>
   );
 };

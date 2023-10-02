@@ -1,4 +1,4 @@
-import { Grid, Container, Center } from "@chakra-ui/react";
+import { Grid, Container, Center, useMediaQuery } from "@chakra-ui/react";
 import { useState, React } from "react";
 import {
   pegonKeyboardLevel1,
@@ -60,12 +60,19 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
     inputElementRef.current.focus()
   }
 
+  const [isLargerThan765] = useMediaQuery('(min-width: 765px)')
+  const [isLargerThan1100] = useMediaQuery('(min-width: 1100px)')
   return (
-    <Center bg="gray.700" p={2}>
+    <Center>
+    <Center 
+      mt={isLargerThan765? null: 180}
+    >
       <Grid templateColumns="repeat(10, 1fr)" 
         templateRows="repeat(5, 1fr)" 
-        gap={1} 
-        w="100%"
+        w={isLargerThan1100? 1000: isLargerThan765? 700: "100%"}
+        h={isLargerThan765? 245: 200}
+        position={isLargerThan765? null: "fixed"}
+        bottom={isLargerThan765? null: "0"}
       >
         {level.map((item, index) => {
           return (
@@ -78,5 +85,6 @@ export const PegonKeyboard = ({ inputText, setInputText, inputElementRef }) => {
         })}
       </Grid>
     </Center>
-  );
+    </Center>
+  )
 };
