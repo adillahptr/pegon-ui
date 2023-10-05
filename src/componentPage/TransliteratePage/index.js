@@ -335,7 +335,6 @@ const TransliteratePage = () => {
             h="100%"
           >
             <PegonKeyboard
-              inputText={inputText}
               setInputText={setInputText}
               inputElementRef={inputElementRef}
             />
