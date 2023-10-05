@@ -38,6 +38,7 @@ export const TransliterateInput = ({
   isLatinInput,
   standardLatin,
   inputElementRef,
+  hasKeyboard,
   handleShowKeyboard,
   ...props
 }) => {
@@ -78,11 +79,13 @@ export const TransliterateInput = ({
               {...props}
             />
             <HStack justify="space-between">
-              <IconButton
+              {!isLatinInput && hasKeyboard
+              ? <IconButton
                 onClick={handleShowKeyboard}
                 variant="ghost"
                 icon={<MdOutlineKeyboardAlt />}
               />
+              : null}
               <Text fontSize="sm" textColor="gray.300">
                 {""}
               </Text>

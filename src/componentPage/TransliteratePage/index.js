@@ -20,6 +20,7 @@ import { TransliterationHeader } from "./Fragments/TransliterationHeader";
 import { FaInfo } from "react-icons/fa";
 import { CheatSheetDrawer } from "./Fragments/CheatSheetDrawer";
 import { PegonKeyboard } from "./Fragments/PegonKeyboard";
+import { VirtualKeyboard, checkHasKeyboard } from "./Fragments/VirtualKeyboard";
 import { scriptsData } from "src/utils/objects";
 
 import {
@@ -165,6 +166,7 @@ const TransliteratePage = () => {
   );
   const inputElementRef = useRef();
   const [showKeyboard, setShowKeyboard] = useState(false);
+  const [hasKeyboard, setHasKeyboard] = useState(checkHasKeyboard(script));
 
   const handleShowKeyboard = (event) => {
     setShowKeyboard(showKeyboard => !showKeyboard)
@@ -196,6 +198,10 @@ const TransliteratePage = () => {
     setInputText(outputText);
     setOutputText(temp);
   };
+
+  useEffect(() => {
+    setHasKeyboard(() => checkHasKeyboard(script));
+  }, [script]);
 
   useEffect(() => {
     setTransliterateHook(() => selectTransliterator(script, variant));
@@ -307,6 +313,7 @@ const TransliteratePage = () => {
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? standardLatin : null}
                   inputElementRef={inputElementRef}
+                  hasKeyboard={hasKeyboard}
                   handleShowKeyboard={handleShowKeyboard}
                 />
                 <TransliterateInput
@@ -321,12 +328,13 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? null : standardLatin}
+                  hasKeyboard={hasKeyboard}
                   handleShowKeyboard={handleShowKeyboard}
                 />
               </Stack>
             </Card>
           </VStack>
-          {showKeyboard?
+          {showKeyboard && !isLatinInput?
           <VStack
             px={10}
             p={5}
@@ -334,7 +342,8 @@ const TransliteratePage = () => {
             w="100%"
             h="100%"
           >
-            <PegonKeyboard
+            <VirtualKeyboard
+              script={script}
               setInputText={setInputText}
               inputElementRef={inputElementRef}
             />
