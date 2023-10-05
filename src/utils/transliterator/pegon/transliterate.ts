@@ -529,6 +529,15 @@ const closedSyllable = (rules: PlainRule[]): RegexRule[] =>
 const closedSyllableWithSoundARules: RegexRule[] =
     closedSyllable(ruleProduct(ruleProduct(consonantRules,aWithFatha), consonantRules))
 
+const firstSyllableWithSoundA: RegexRule[] =
+    asWordBeginning(ruleProduct(consonantRules, aWithFatha));
+
+const countSyllable = (word: string): number => {
+    const matches = word.match(/(e_u|a_i|a_u|\^e|`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
+    if (matches)
+        return matches.length
+    return 0
+}
 
 const indonesianPrefixesRules: PlainRule[] = [
     ["di", Pegon.Dal + Pegon.Ya],
@@ -563,11 +572,13 @@ const indonesianSuffixes: PlainRule[] = [
     ["pun", Pegon.Peh + Pegon.Waw + Pegon.Nun],
     ["kan", Pegon.Kaf + Pegon.Fatha + Pegon.Nun],
 ]
-const suffixAnForBaseWordWithEndingA: PlainRule[] = [
-    
+
+// R46
+const suffixAnForBaseWordWithEndingA: PlainRule[] = [    
     ["an", Pegon.AlifWithHamzaAbove + Pegon.Nun],
 ]
 
+// R47
 const suffixAn: PlainRule[] = [
     ["an", Pegon.Alif + Pegon.Nun],
 ]
@@ -607,6 +618,9 @@ const baseWordLastLetterVowel: PlainRule[] = [
 ]
 
 const suffixFirstLetterVowel: PlainRule[] = [
+    ["e_u", Pegon.Alif + Pegon.MaddaAbove + Pegon.Waw],
+    ["a_i", Pegon.Alif + Pegon.Fatha + Pegon.Ya + Pegon.Sukun],
+    ["a_u", Pegon.Alif + Pegon.Fatha + Pegon.Waw + Pegon.Sukun],
     ["a", Pegon.Alif],
     ["i", Pegon.Ya],
     ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
@@ -619,6 +633,8 @@ const doubleVowelForSuffixRules: PlainRule [] = [
     ["aa", Pegon.AlifWithHamzaAbove],
 ]
 
+// Rule untuk transliterasi suffix 
+// Huruf terakhir kata dasar (vokal) dan huruf pertama suffix (vokal)
 const baseWordLastLetterVowelSuffixFirstLetterVowel: PlainRule[] = 
     chainRule(doubleVowelForSuffixRules,
         ruleProduct(baseWordLastLetterVowel, suffixFirstLetterVowel))
@@ -685,8 +701,7 @@ const jawaSuffixesRules: PlainRule[] = [
     ["a", Pegon.Alif],
 ]
 
-const transliterateJawaPrefixes =
-    (prefix: string): string =>
+const transliterateJawaPrefixes = (prefix: string): string =>
         transliterate(prefix, prepareRules(jawaPrefixesRules));
 
 const transliterateJawaSuffixesVowel = (suffix: string, baseWord: string): string => {
@@ -712,6 +727,108 @@ const transliterateJawaSuffixes = (suffix: string, baseWord: string): string => 
     }
 
     return transliterate(suffix, prepareRules(jawaSuffixesRules))
+}
+
+const maduraPrefixesRules: PlainRule[] = [
+    ["koma", Pegon.Kaf + Pegon.Fatha + Pegon.Waw + Pegon.Mim + Pegon.Fatha],
+    ["par", Pegon.Peh + Pegon.Fatha + Pegon.Ra],
+    ["pe", Pegon.Peh + Pegon.Fatha + Pegon.Ya],
+    ["pan_g", Pegon.Peh + Pegon.Fatha + Pegon.Nga],
+    ["pam", Pegon.Peh + Pegon.Fatha + Pegon.Mim],
+    ["pan", Pegon.Peh + Pegon.Fatha + Pegon.Nun],
+    ["pa", Pegon.Peh + Pegon.Fatha],
+    ["sa", Pegon.Sin + Pegon.Fatha],
+    ["ka", Pegon.Kaf + Pegon.Fatha],
+    ["ta", Pegon.Ta + Pegon.Fatha],
+    ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
+    ["a", Pegon.Ha + Pegon.Fatha]
+]
+
+const maduraSuffixesRules: PlainRule[] = [
+    ["en", Pegon.Fatha + Pegon.Ya + Pegon.Nun],
+    ["ag_hi", Pegon.Alif + Pegon.Ghain + Pegon.Ya],
+    ["an", Pegon.Alif + Pegon.Nun],
+    ["e", Pegon.Fatha + Pegon.Ya],
+    ["a", Pegon.Alif],
+]
+
+const transliterateMaduraPrefixes = (prefix: string): string =>
+        transliterate(prefix, prepareRules(maduraPrefixesRules))
+
+const transliterateMaduraSuffixesVowel = (suffix: string, baseWord: string): string => {
+    const maduraSuffixesRulesAlt: PlainRule[] = [
+        ["n", Pegon.Nun],
+        ["g_hi", Pegon.Ghain + Pegon.Ya],
+    ]
+
+    const maduraSuffixesVowelRules: Rule[] =
+            prepareRules(chainRule(
+                ruleProduct(baseWordLastLetterVowelSuffixFirstLetterVowel, maduraSuffixesRulesAlt),
+                doubleEndingVowelForSuffixRules,
+                baseWordLastLetterVowelSuffixFirstLetterVowel))
+
+
+    return transliterate(baseWord[baseWord.length-1]+suffix, maduraSuffixesVowelRules)
+}
+
+const transliterateMaduraSuffixes = (suffix: string, baseWord: string): string => {
+    if (baseWord[baseWord.length-1].match(/^[aiueoWAY]/) && suffix[0].match(/^[aiueo]/)) {
+        return transliterateMaduraSuffixesVowel(suffix, baseWord)
+    }
+
+    return transliterate(suffix, prepareRules(maduraSuffixesRules))
+}
+
+const sundaPrefixesRules: PlainRule[] = [
+    ["pan_g", Pegon.Peh + Pegon.Fatha + Pegon.Nga],
+    ["tin_g", Pegon.Ta + Pegon.Ya + Pegon.Nga],
+    ["ba", Pegon.Ba + Pegon.Fatha],
+    ["di", Pegon.Dal + Pegon.Ya],
+    ["ka", Pegon.Kaf + Pegon.Fatha],
+    ["pa", Pegon.Peh + Pegon.Fatha],
+    ["sa", Pegon.Sin + Pegon.Fatha],
+    ["pika", Pegon.Peh + Pegon.Ya + Pegon.Kaf + Pegon.Fatha],
+    ["pi", Pegon.Peh + Pegon.Ya],
+    ["si", Pegon.Sin + Pegon.Ya],
+    ["ti", Pegon.Ta + Pegon.Ya],
+    ["man_g", Pegon.Mim + Pegon.Fatha + Pegon.Nga],
+    ["mika", Pegon.Mim + Pegon.Ya + Pegon.Kaf + Pegon.Fatha],
+    ["mi", Pegon.Mim + Pegon.Ya],
+    ["ma", Pegon.Mim + Pegon.Fatha],
+]
+
+const transliterateSundaPrefixes = (prefix: string): string =>
+        transliterate(prefix, prepareRules(sundaPrefixesRules))
+
+const transliterateSundaSuffixesVowel = (suffix: string, baseWord: string): string => {
+    const sundaSuffixesRulesAlt: PlainRule[] = [
+        ["n", Pegon.Nun],
+    ]
+
+    const sundaSuffixesVowelRules: Rule[] =
+            prepareRules(chainRule(
+                ruleProduct(baseWordLastLetterVowelSuffixFirstLetterVowel, sundaSuffixesRulesAlt),
+                doubleEndingVowelForSuffixRules,
+                baseWordLastLetterVowelSuffixFirstLetterVowel))
+
+
+    return transliterate(baseWord[baseWord.length-1]+suffix, sundaSuffixesVowelRules)
+}
+
+const sundaSuffixesRules: PlainRule[] = [
+    ["ke_un", Pegon.Kaf + Pegon.MaddaAbove + Pegon.Waw + Pegon.Nun],
+    ["e_un", Pegon.MaddaAbove + Pegon.Waw + Pegon.Nun],
+    ["ana", Pegon.Alif + Pegon.Nun + Pegon.Alif],
+    ["an", Pegon.Alif + Pegon.Nun],
+    ["na", Pegon.Nun + Pegon.Alif],
+]
+
+const transliterateSundaSuffixes = (suffix: string, baseWord: string): string => {
+    if (baseWord.match(/(a|i|u|e_u|e|o)$/) && suffix.match(/^(a|i|u|e_u|o|e)(.*)/)) {
+        return transliterateSundaSuffixesVowel(suffix, baseWord)
+    }
+
+    return transliterate(suffix, prepareRules(sundaSuffixesRules))
 }
 
 const transliterateIndonesianAffixes = (affixes: string[], baseWord: string): string[] => {
@@ -757,14 +874,44 @@ const transliterateJawaAffixes = (affixes: string[], baseWord: string): string[]
     return [prefixResult, suffixResult]
 }
 
-const firstSyllableWithSoundA: RegexRule[] =
-    asWordBeginning(ruleProduct(consonantRules, aWithFatha));
+const transliterateMaduraAffixes = (affixes: string[], baseWord: string): string[] => {
+    let prefixResult = ''
+    let suffixResult = ''
 
-const countSyllable = (word: string): number => {
-    const matches = word.match(/(e_u|a_i|a_u|\^e|`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
-    if (matches)
-        return matches.length
-    return 0
+    for (let affix of affixes){
+        let prefixMatches = affix.match(/(.*)-$/)
+        let suffixMatches = affix.match(/^-(.*)/)
+
+        if (prefixMatches) {
+            prefixResult += transliterateMaduraPrefixes(prefixMatches[1])
+        }
+
+        else if (suffixMatches) {
+            suffixResult += transliterateMaduraSuffixes(suffixMatches[1], baseWord)
+        }
+    }
+
+    return [prefixResult, suffixResult]
+}
+
+const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[] => {
+    let prefixResult = ''
+    let suffixResult = ''
+
+    for (let affix of affixes){
+        let prefixMatches = affix.match(/(.*)-$/)
+        let suffixMatches = affix.match(/^-(.*)/)
+
+        if (prefixMatches) {
+            prefixResult += transliterateSundaPrefixes(prefixMatches[1])
+        }
+
+        else if (suffixMatches) {
+            suffixResult += transliterateSundaSuffixes(suffixMatches[1], baseWord)
+        }
+    }
+
+    return [prefixResult, suffixResult]
 }
 
 const numbers : PlainRule[] = [
@@ -855,10 +1002,14 @@ export const transliterateLatinToPegonStemResult = (stemResult: StemResult, lang
         return prefix + base + suffix;
     } else if (lang === "Sunda") {
         // transliterateStemResultSunda
-        return transliterateLatinToPegon(stemResult.baseWord);
+        let base = transliterateLatinToPegon(stemResult.baseWord)
+        let [prefix, suffix] = transliterateSundaAffixes(stemResult.affixSequence, stemResult.baseWord)
+        return prefix + base + suffix;
     } else if (lang === "Madura") {
         // transliterateStemResultMadura
-        return transliterateLatinToPegon(stemResult.baseWord);
+        let base = transliterateLatinToPegon(stemResult.baseWord)
+        let [prefix, suffix] = transliterateMaduraAffixes(stemResult.affixSequence, stemResult.baseWord)
+        return prefix + base + suffix;    
     } else {
         // transliterateStemResultIndonesia
         let base = transliterateLatinToPegon(stemResult.baseWord)
