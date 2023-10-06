@@ -44,7 +44,7 @@ const scriptsData = {
 const getFont = (script, variant) => {
   switch (script) {
     case "Pegon":
-      return "Noto Naskh Arabic";
+      return "Noto Naskh Arabic, Scheherazade New";
     case "Jawi":
       return "Noto Naskh Arabic";
     case "Cham":

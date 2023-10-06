@@ -7,7 +7,7 @@ import {
 } from "src/utils/pegonKeyboardKeys";
 import { KeyboardItem } from "./KeyboardItem";
 
-export const PegonKeyboard = ({ setInputText, inputElementRef }) => {
+export const PegonKeyboard = ({ setInputText, inputElementRef, fontFamily }) => {
   const [level, setLevel] = useState(pegonKeyboardLevel1);
   var inputElement = document.querySelector("TextArea[aria-readonly='false']")
 
@@ -76,6 +76,7 @@ export const PegonKeyboard = ({ setInputText, inputElementRef }) => {
         {level.map((item, index) => {
           return (
             <KeyboardItem
+              fontFamily={fontFamily}
               key={index}
               {...item}
               onClick={handleKeyClick}

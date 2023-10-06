@@ -25,6 +25,8 @@ import "@fontsource/noto-serif-lao";
 import "@fontsource/noto-sans-javanese";
 import "@fontsource/noto-sans-sundanese";
 import "@fontsource/noto-sans-balinese";
+
+import "@fontsource/scheherazade-new"
 import { getFont } from "src/utils/objects";
 
 export const TransliterateInput = ({

@@ -344,6 +344,7 @@ const TransliteratePage = () => {
           >
             <VirtualKeyboard
               script={script}
+              variant={variant}
               setInputText={setInputText}
               inputElementRef={inputElementRef}
             />
