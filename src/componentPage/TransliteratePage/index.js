@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import AppLayout from "../Page/AppLayout";
 import Head from "next/head";
 import {
@@ -10,6 +10,8 @@ import {
   Stack,
   Divider,
   useDisclosure,
+  Container,
+  Center,
 } from "@chakra-ui/react";
 import { ScriptTypeSelect } from "./Fragments/ScriptTypeSelect";
 import { VariantSelect } from "./Fragments/VariantSelect";
@@ -17,6 +19,8 @@ import { TransliterateInput } from "./Fragments/TransliterateInput";
 import { TransliterationHeader } from "./Fragments/TransliterationHeader";
 import { FaInfo } from "react-icons/fa";
 import { CheatSheetDrawer } from "./Fragments/CheatSheetDrawer";
+import { PegonKeyboard } from "./Fragments/PegonKeyboard";
+import { VirtualKeyboard, checkHasKeyboard } from "./Fragments/VirtualKeyboard";
 import { scriptsData } from "src/utils/objects";
 
 import {
@@ -160,6 +164,13 @@ const TransliteratePage = () => {
   const [transliterateHook, setTransliterateHook] = useState(
     () => usePegonIndonesianTransliterator,
   );
+  const inputElementRef = useRef();
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const [hasKeyboard, setHasKeyboard] = useState(checkHasKeyboard(script));
+
+  const handleShowKeyboard = (event) => {
+    setShowKeyboard(showKeyboard => !showKeyboard)
+  };
 
   const handleScriptChange = (event) => {
     const newScript = event.target.innerText;
@@ -187,6 +198,10 @@ const TransliteratePage = () => {
     setInputText(outputText);
     setOutputText(temp);
   };
+
+  useEffect(() => {
+    setHasKeyboard(() => checkHasKeyboard(script));
+  }, [script]);
 
   useEffect(() => {
     setTransliterateHook(() => selectTransliterator(script, variant));
@@ -297,6 +312,9 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? standardLatin : null}
+                  inputElementRef={inputElementRef}
+                  hasKeyboard={hasKeyboard}
+                  handleShowKeyboard={handleShowKeyboard}
                 />
                 <TransliterateInput
                   placeholder="Transliteration result"
@@ -310,10 +328,28 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? null : standardLatin}
+                  hasKeyboard={hasKeyboard}
+                  handleShowKeyboard={handleShowKeyboard}
                 />
               </Stack>
             </Card>
           </VStack>
+          {showKeyboard && !isLatinInput?
+          <VStack
+            px={10}
+            p={5}
+            spacing={0}
+            w="100%"
+            h="100%"
+          >
+            <VirtualKeyboard
+              script={script}
+              variant={variant}
+              setInputText={setInputText}
+              inputElementRef={inputElementRef}
+            />
+          </VStack> : null
+          }
         </VStack>
       </AppLayout>
     </>

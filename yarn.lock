@@ -2208,6 +2208,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource/open-sans/-/open-sans-5.0.3.tgz#1a5d1528b507a5ba43f8b231d1e4cc0775efdf8c"
   integrity sha512-L86qrEfW7IWSGojCtiPpw2/M6qKjxDG+EV4k1xMVFCkhh6Z6gyZwevqCt0yOvd1BmjrtUAIAfSzFTjBn3DeZJw==
 
+"@fontsource/scheherazade-new@^5.0.14":
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/@fontsource/scheherazade-new/-/scheherazade-new-5.0.14.tgz#f014dc5eae160294fbd01420d4d3cd570fab19f6"
+  integrity sha512-Box0n5Fz9IqotazR6AJdOQLvrVXnigIne61UY9yKdV+tRLAMt2jusZSV0SLtdkAwrW0Une/L0bc/EkGc8iltEg==
+
 "@humanwhocodes/config-array@^0.11.10":
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.10.tgz#5a3ffe32cc9306365fb3fd572596cd602d5e12d2"

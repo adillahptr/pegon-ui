@@ -3,14 +3,6 @@ import type { StemResult } from "./stemmer";
 export class StemmerCache {
    private static instance: StemmerCache;
    private cache: { word: string, result: StemResult }[] = [];
-   
-   constructor() {
-      if (!!StemmerCache.instance) {
-         return StemmerCache.instance;
-      }
-      StemmerCache.instance = this;
-      return this;
-    }
 
    public set = (word: string, result: StemResult): void => {
       if (!this.recordExists(word)) {
