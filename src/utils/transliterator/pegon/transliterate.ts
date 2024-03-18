@@ -104,6 +104,7 @@ const enum Pegon {
     Hamza = "\u0621",
     //Tambahan
     Pepet = "\u08e4",
+    Shadda = "\u0651",              //  ّ
 }
 
 const punctuationRules: PlainRule[] = [
@@ -433,6 +434,9 @@ const digraphConsonantRules: PlainRule[] = [
     ["n_y", Pegon.Nya],
 ];
 
+//const doubleSameConsonantRules: PlainRule[] = 
+//    monographConsonantRules.map<PlainRule>(([key, val]) => [key.concat(key), val.concat(Pegon.Shadda)])
+
 const consonantRules: PlainRule[] = chainRule(
     digraphConsonantRules,
     monographConsonantRules)
@@ -447,6 +451,15 @@ const deadMonographConsonantRules: PlainRule[] =
     monographConsonantRules
 
 const deadConsonantRules: PlainRule[] = consonantRules
+
+const doubleSameConsonantRules: PlainRule[] =
+    consonantRules.map<PlainRule>(([key, val]) => [key.concat(key), val.concat(Pegon.Shadda)])
+
+const shaddaRules: PlainRule[] =
+    chainRule(
+        ruleProduct(doubleSameConsonantRules, rule1314),
+        ruleProduct(doubleSameConsonantRules, digraphVowelRules),
+        ruleProduct(doubleSameConsonantRules, monographVowelRules))
 
 // TODO
 const ruleProductDoubleMonographConsonant = (
@@ -468,7 +481,7 @@ const singleVowelSyllableRules: PlainRule[] =
         ruleProduct(consonantRules, monographVowelRules))
 
 const doubleVowelSyllableRules: PlainRule[] =
-    ruleProduct(consonantRules, doubleVowelRules)
+        ruleProduct(consonantRules, doubleVowelRules)
 
 const beginningIWithDeadConsonantRules: PlainRule[] =
     chainRule(
@@ -496,7 +509,9 @@ const beginningIWithOpenConsonantAsSingleWordRules: Rule[] =
                                  doubleEndingVowelRules)))
 
 const singleVowelSyllableAsWordEndingRules: RegexRule[] =
-    asWordEnding(ruleProduct(consonantRules, singleEndingVowelRules))
+    asWordEnding(chainRule(
+        ruleProduct(doubleSameConsonantRules, singleEndingVowelRules),
+        ruleProduct(consonantRules, singleEndingVowelRules)))
 
 const doubleVowelSyllableAsWordEndingRules: RegexRule[] = 
     asWordEnding(ruleProduct(consonantRules, doubleEndingVowelRules))
@@ -821,6 +836,7 @@ const numbers : PlainRule[] = [
 
 const latinToPegonScheme: Rule[] =
     prepareRules(chainRule(
+        shaddaRules,
         rule1314,
         specialPrepositionAsSingleWordsRule,
         specialRaWithMaddaAboveRules,
@@ -840,6 +856,7 @@ const latinToPegonScheme: Rule[] =
         singleVowelSyllableAsWordEndingRules,
         doubleVowelSyllableRules,
         singleVowelSyllableRules,
+
         
         singleVowelRules,
         deadConsonantRules,
