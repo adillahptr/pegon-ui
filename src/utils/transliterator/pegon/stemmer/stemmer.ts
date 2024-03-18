@@ -1,7 +1,5 @@
 import { StemmerIndonesia } from './stemmerIndonesia';
 import { StemmerJawa } from './stemmerJawa';
-import { StemmerMadura } from './stemmerMadura';
-import { StemmerSunda } from './stemmerSunda';
 
 export interface StemResult {
     baseWord: string;
@@ -10,8 +8,6 @@ export interface StemResult {
 
 const stemmerIndonesia = new StemmerIndonesia()
 const stemmerJawa = new StemmerJawa()
-const stemmerSunda = new StemmerSunda()
-const stemmerMadura = new StemmerMadura()
 
 export function stem(kataAwal: string, bahasa: string): StemResult {
     const stemResultTemp: StemResult = {
@@ -23,10 +19,12 @@ export function stem(kataAwal: string, bahasa: string): StemResult {
         return stemmerJawa.stem(kataAwal);
     } else if (bahasa === "Sunda") {
         // Function Sunda Stemmer
-        return stemmerSunda.stem(kataAwal);
+        stemResultTemp.baseWord = kataAwal;
+        return stemResultTemp;
     } else if (bahasa === "Madura") {
         // Function Madura Stemmer
-        return stemmerMadura.stem(kataAwal);
+        stemResultTemp.baseWord = kataAwal;
+        return stemResultTemp;
     } else {
         // Function Indonesian Stemmer
         return stemmerIndonesia.stem(kataAwal);

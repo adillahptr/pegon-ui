@@ -1,16 +1,14 @@
 import type { StemResult } from "./stemmer";
-import { RootWordDictionary } from "./rootWordDictionary";
+import { IndonesianDictionary } from "./indonesianDictionary";
 import { StemmerCache } from "./stemmerCache";
 import { suffixRules } from "./indonesianStemmingRules";
 import { prefixRules } from "./indonesianStemmingRules";
 import { satisfyRulePrecedenceAdjustment } from "./indonesianStemmingRules";
 import { hasInvalidAffixPair } from "./indonesianStemmingRules";
 import { normalizeText } from "./textNormalizer";
-import { kataDasarIndonesia } from './data/kataDasarIndonesia';
-
 
 export class StemmerIndonesia {
-    private idnDict = new RootWordDictionary(kataDasarIndonesia)
+    private idnDict = new IndonesianDictionary()
     private cache = new StemmerCache()
 
     public stem(word: string): StemResult {
@@ -41,9 +39,9 @@ class Context {
     private currentWord: string
     private currentRemoved: string[]
     private result: StemResult
-    private dictionary: RootWordDictionary
+    private dictionary: IndonesianDictionary
 
-    constructor(originalWord: string, dictionary: RootWordDictionary) {
+    constructor(originalWord: string, dictionary: IndonesianDictionary) {
         this.originalWord = originalWord
         this.currentWord = originalWord
         this.result = {
