@@ -28,8 +28,8 @@ export const transliterateFromView = (stringToTransliterate: string, isLatinToPe
                         transliterateLatinArabToStandardLatin(middleSideString);
         let rightSideString = isLatinToPegon ? stemLatinToPegon(rightSideBracket, lang) : transliteratePegonToLatin(rightSideBracket, lang);
         let rightSideStandardString = isLatinToPegon ?
-                       transliterateReversibleLatinToStandardLatin(rightSideBracket) :
-                       transliterateReversibleLatinToStandardLatin(rightSideString);
+                       transliterateReversibleLatinToStandardLatin(rightSideBracket, lang) :
+                       transliterateReversibleLatinToStandardLatin(rightSideString, lang);
 
         transliterateResult.translitrateResult = leftSideString.translitrateResult + "(" + middleSideString + ")" + rightSideString;
         transliterateResult.standardLatin = leftSideString.standardLatin + "(" + middleSideStandardString + ")" + rightSideStandardString;
