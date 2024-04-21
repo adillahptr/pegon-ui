@@ -37,11 +37,11 @@ export const transliterateFromView = (stringToTransliterate: string, isLatinToPe
     } else {
         if (isLatinToPegon) {
             transliterateResult.translitrateResult = stemLatinToPegon(stringToTransliterate, lang);
-            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(stringToTransliterate);
+            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(stringToTransliterate, lang);
             return transliterateResult;
         } else {
             transliterateResult.translitrateResult = transliteratePegonToLatin(stringToTransliterate, lang);
-            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(transliterateResult.translitrateResult);
+            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(transliterateResult.translitrateResult, lang);
             return transliterateResult;
         }
     }

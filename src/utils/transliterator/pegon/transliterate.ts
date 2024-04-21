@@ -1187,10 +1187,18 @@ const standardLatinRules: PlainRule[] = [
     ["^.", ""]
 ];
 
+const changeFaToP: PlainRule[] = [
+    ["f", "p"]
+];
 
 export const transliterateReversibleLatinToStandardLatin =
-    (reversibleString: string): string =>
-    transliterate(reversibleString, prepareRules(standardLatinRules));
+    (reversibleString: string, lang:string): string => {
+        let TNRResult = transliterate(reversibleString, prepareRules(standardLatinRules));
+        if (lang === 'Jawa' || lang === 'Sunda') {
+            TNRResult = transliterate(TNRResult, prepareRules(changeFaToP));
+        }
+        return TNRResult;
+}
 
 /*
   Transitive rules necessities:
