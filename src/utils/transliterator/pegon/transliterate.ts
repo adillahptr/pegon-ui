@@ -179,7 +179,8 @@ const rule1314: PlainRule[] = [
     ["uW", Pegon.Damma + Pegon.Waw],
     ["iY", Pegon.Kasra + Pegon.Ya],
     ["aA", Pegon.Fatha + Pegon.Alif],
-    ["i^Y", Pegon.Kasra + Pegon.Maksura]
+    ["i^Y", Pegon.Kasra + Pegon.Maksura],
+    ["e^Y", Pegon.Fatha + Pegon.Maksura]
 ]
 
 const beginningDigraphVowelRules: PlainRule[] = [
@@ -1173,6 +1174,7 @@ const standardLatinRules: PlainRule[] = [
     ["a_i", "ai"],
     ["a_u", "au"],
     ["i^Y", "i"],
+    ["e^Y", "e"],
     ["iY", "i"],
     ["uW", "u"],
     ["aA", "a"],
