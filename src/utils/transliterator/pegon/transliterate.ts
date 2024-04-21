@@ -105,6 +105,7 @@ const enum Pegon {
     FathaThenYaThenKasra = "\u064E\u064A\u0650",
     TaMarbuta = "\u0629",
     YaWithHamzaAbove = "\u0678",
+    WawWithHamzaAbove= "\u0624",
     FathaThenYaWithHamzaAbove = "\u064E\u0678",
     Maksura = "\u0649",
     Comma = "\u060C",
@@ -122,7 +123,7 @@ const punctuationRules: PlainRule[] = [
     [",", Pegon.Comma]
 ]
 const marbutahRules: PlainRule[] = [
-    ["t_", Pegon.TaMarbuta]
+    ["t-", Pegon.TaMarbuta]
 ]
 
 const sukunRules: PlainRule[] = [
@@ -154,7 +155,7 @@ const digraphVowelRules: PlainRule[] = [
 ]
 
 const monographVowelHarakatAtFirstAbjadRules: PlainRule[] = [
-    ["A", Pegon.Alif + Pegon.Fatha],
+    //["A", Pegon.Alif + Pegon.Fatha],
     ["a", Pegon.Alif + Pegon.Fatha],
     ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
     ["o", Pegon.Alif + Pegon.Fatha + Pegon.Waw],
@@ -435,7 +436,9 @@ const monographConsonantRules: PlainRule[] = [
     ["w", Pegon.Waw],
     ["y", Pegon.Ya],
     // Tambahan konsonan Arab
-    ["'`", Pegon.Hamza]
+    ["`", Pegon.Hamza],
+    ["`", Pegon.YaWithHamzaAbove],
+    ["`", Pegon.WawWithHamzaAbove],
 ]
 
 const digraphConsonantRules: PlainRule[] = [
