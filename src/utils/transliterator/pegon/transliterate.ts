@@ -1193,11 +1193,13 @@ const changeFaToP: PlainRule[] = [
 
 export const transliterateReversibleLatinToStandardLatin =
     (reversibleString: string, lang:string): string => {
-        let TNRResult = transliterate(reversibleString, prepareRules(standardLatinRules));
         if (lang === 'Jawa' || lang === 'Sunda') {
-            TNRResult = transliterate(TNRResult, prepareRules(changeFaToP));
-        }
-        return TNRResult;
+            return transliterate(
+                transliterate(reversibleString, prepareRules(standardLatinRules)),
+                prepareRules(changeFaToP)
+            )
+        } else
+            return transliterate(reversibleString, prepareRules(standardLatinRules))
 }
 
 /*
