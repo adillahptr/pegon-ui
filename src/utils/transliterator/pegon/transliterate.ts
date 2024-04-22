@@ -104,7 +104,7 @@ const enum Pegon {
     FathaThenWawThenKasra = "\u064E\u0648\u0650",
     FathaThenYaThenKasra = "\u064E\u064A\u0650",
     TaMarbuta = "\u0629",
-    YaWithHamzaAbove = "\u0678",
+    YaWithHamzaAbove = "\u0626",
     WawWithHamzaAbove= "\u0624",
     FathaThenYaWithHamzaAbove = "\u064E\u0678",
     Maksura = "\u0649",
