@@ -34,7 +34,7 @@ const enum Pegon {
     // Harakat
     Fatha = "\u064E",
     CurlyFatha = "\u08E4",
-    MaddaAbove = "\u0653",
+    MaddaAbove = "\u08E4",
     SuperscriptAlif = "\u0670", // khanjariah
     Kasra = "\u0650",
     Damma = "\u064F",
