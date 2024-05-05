@@ -193,11 +193,11 @@ const beginningMonographVowelRules: PlainRule[] = [
     ["a", Pegon.AlifWithHamzaAbove],
     ["o", Pegon.Alif + Pegon.Fatha + Pegon.Waw],
     ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
-    ["a", Pegon.Alif + Pegon.Fatha],
+    ["A", Pegon.Alif + Pegon.Fatha],
     ["i", Pegon.Alif + Pegon.Ya ],
-    ["i", Pegon.Alif + Pegon.Kasra ],
+    ["I", Pegon.Alif + Pegon.Kasra ],
     ["u", Pegon.Alif + Pegon.Waw],
-    ["u", Pegon.Alif + Pegon.Damma],
+    ["U", Pegon.Alif + Pegon.Damma],
 ]
 
 const beginningSingleVowelRules: PlainRule[] =
@@ -206,7 +206,6 @@ const beginningSingleVowelRules: PlainRule[] =
         beginningMonographVowelRules)
 
 const beginningIForDeadConsonantRules: PlainRule[] = [
-    ["i", Pegon.AlifWithHamzaBelow + Pegon.Kasra],
     ["i", Pegon.AlifWithHamzaBelow],
 ]
 
@@ -532,7 +531,7 @@ const doubleVowelSyllableRules: PlainRule[] =
 const beginningIWithDeadConsonantRules: PlainRule[] =
     chainRule(
         ruleProduct(beginningIForDeadConsonantRules, deadDigraphConsonantRules),
-        ruleProduct(beginningIForOpenConsonantRules, deadMonographConsonantRules))
+        ruleProduct(beginningIForDeadConsonantRules, deadMonographConsonantRules))
 
 const beginningIWithDeadConsonantAsWordBeginningRules: RegexRule[] =
     asWordBeginning(beginningIWithDeadConsonantRules)
@@ -1308,6 +1307,7 @@ const standardLatinRules: PlainRule[] = [
     ["T_h", "ṭ"],
     ["t_H", "ṭ"],
     ["t_s", "ṫ"],
+    ["t-", "t"],
     ["h_h", "ḥ"],
     ["k_h", "ḵ"],
     ["d_h", "ḍ"],
@@ -1343,7 +1343,15 @@ const standardLatinRules: PlainRule[] = [
     ["U", "u"],
     ["G", "g"],
     [".", ""],
-    ["^.", ""]
+    ["^.", ""],
+    ["g_1", "g"],
+    ["g_2", "g"],
+    ["g_3", "g"],
+    ["g_4", "g"],
+    ["g_5", "g"],
+    ["g_6", "g"],
+    ["g_7", "g"],
+    ["g_8", "g"],
 ];
 
 const changeFaToP: PlainRule[] = [
