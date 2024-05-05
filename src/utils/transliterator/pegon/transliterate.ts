@@ -1003,7 +1003,6 @@ const firstSyllableWithSoundA: RegexRule[] =
     asWordBeginning(ruleProduct(consonantRules, aWithFatha));
 
 const countSyllable = (word: string): number => {
-    console.log(shaddaConsonanRules)
     const matches = word.match(/(e_u|a_i|a_u|\^e|`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
     if (matches)
         return matches.length
