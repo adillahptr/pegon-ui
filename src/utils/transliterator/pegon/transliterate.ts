@@ -1003,6 +1003,7 @@ const firstSyllableWithSoundA: RegexRule[] =
     asWordBeginning(ruleProduct(consonantRules, aWithFatha));
 
 const countSyllable = (word: string): number => {
+    console.log(shaddaConsonanRules)
     const matches = word.match(/(e_u|a_i|a_u|\^e|`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
     if (matches)
         return matches.length
@@ -1024,7 +1025,6 @@ const numbers : PlainRule[] = [
 
 const latinToPegonScheme: Rule[] =
     prepareRules(chainRule(
-        shaddaRules,
         rule1314,
         specialPrepositionAsSingleWordsRule,
         specialRaWithMaddaAboveRules,
@@ -1056,7 +1056,6 @@ const latinToPegonScheme: Rule[] =
 
 const latinToPegonSchemeForMoreThanTwoSyllables: Rule[] =
     prepareRules(chainRule(
-        shaddaRules,
         rule1314,
         specialPrepositionAsSingleWordsRule,
         specialRaWithMaddaAboveRules,
