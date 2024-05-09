@@ -43,7 +43,6 @@ export const wordDelimiters: string[] = [
   '"',
   "(",
   ")",
-  "-",
   ":",
   ";",
   "،",
