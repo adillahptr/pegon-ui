@@ -151,7 +151,8 @@ const monographVowelRules: PlainRule[] = [
 const digraphVowelRules: PlainRule[] = [
     ["^e", Pegon.MaddaAbove],
     ["`a", Pegon.YaWithHamzaAbove + Pegon.Alif],
-    ["`U", Pegon.WawHamzaAbove + Pegon.Damma]
+    ["`U", Pegon.WawHamzaAbove + Pegon.Damma],
+    ["^i", Pegon.Maksura]
 ]
 
 const monographVowelHarakatAtFirstAbjadRules: PlainRule[] = [
@@ -179,7 +180,7 @@ const rule1314: PlainRule[] = [
     ["uW", Pegon.Damma + Pegon.Waw],
     ["iY", Pegon.Kasra + Pegon.Ya],
     ["aA", Pegon.Fatha + Pegon.Alif],
-    ["i^i", Pegon.Kasra + Pegon.Maksura],
+    ["^iY", Pegon.Kasra + Pegon.Maksura],
     ["e^i", Pegon.Fatha + Pegon.Maksura]
 ]
 
@@ -1324,12 +1325,14 @@ const standardLatinRules: PlainRule[] = [
     ["e_u", "eu"],
     ["a_i", "ai"],
     ["a_u", "au"],
-    ["i^i", "i"],
+    ["a_u", "au"],
+    ["^iY", "i"],
     ["e^i", "e"],
     ["iY", "i"],
     ["uW", "u"],
     ["aA", "a"],
     ["^e", "ě"],
+    ["^i", "i"],
     ["`a", "a"],
     ["`i", "i"],
     ["`u", "u"],
