@@ -7,7 +7,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import React from "react";
-import { MdContentCopy } from "react-icons/md";
+import { MdContentCopy, MdOutlineKeyboardAlt } from "react-icons/md";
 import "@fontsource/noto-sans-cham";
 import "@fontsource/noto-sans-tagalog";
 import "@fontsource/noto-sans-buhid";
@@ -16,19 +16,17 @@ import "@fontsource/noto-sans-tagbanwa";
 
 import "@fontsource/noto-sans-kayah-li";
 import "@fontsource/noto-sans-myanmar";
-import "@fontsource/noto-sans-tai-le";
-
-import "@fontsource/noto-serif-thai";
-import "@fontsource/noto-serif-lao";
-import "@fontsource/noto-sans-tai-viet";
 
 import "@fontsource/noto-sans-buginese";
 import "@fontsource/noto-serif-makasar";
 import "@fontsource/noto-sans-rejang";
-
+import "@fontsource/noto-serif-thai";
+import "@fontsource/noto-serif-lao";
 import "@fontsource/noto-sans-javanese";
 import "@fontsource/noto-sans-sundanese";
 import "@fontsource/noto-sans-balinese";
+
+import "@fontsource/scheherazade-new"
 import { getFont } from "src/utils/objects";
 
 export const TransliterateInput = ({
@@ -41,6 +39,9 @@ export const TransliterateInput = ({
   variant,
   isLatinInput,
   standardLatin,
+  inputElementRef,
+  hasKeyboard,
+  handleShowKeyboard,
   ...props
 }) => {
   const fontFamily = getFont(script, variant);
@@ -58,6 +59,7 @@ export const TransliterateInput = ({
               resize="none"
               borderWidth={0}
               height="100%"
+              ref={inputElementRef}
               focusBorderColor="transparent"
               // make scrollbar translucent
               sx={{
@@ -79,6 +81,13 @@ export const TransliterateInput = ({
               {...props}
             />
             <HStack justify="space-between">
+              {!isLatinInput && hasKeyboard
+              ? <IconButton
+                onClick={handleShowKeyboard}
+                variant="ghost"
+                icon={<MdOutlineKeyboardAlt />}
+              />
+              : null}
               <Text fontSize="sm" textColor="gray.300">
                 {""}
               </Text>
@@ -95,12 +104,14 @@ export const TransliterateInput = ({
       : (result = (
           <Flex direction="column" flex={1} p={4}>
             <Textarea
+              style={fontFamily ? { fontFamily } : null}
               flex={1}
               textColor={isReadOnly ? "gray.300" : "primary.200"}
               textAlign={isRightToLeft ? "right" : "left"}
               resize="none"
               borderWidth={0}
               height="100%"
+              ref={inputElementRef}
               focusBorderColor="transparent"
               // make scrollbar translucent
               sx={{
@@ -135,6 +146,7 @@ export const TransliterateInput = ({
             </HStack>
             <Divider borderWidth={"1px"} />
             <Textarea
+              style={fontFamily ? { fontFamily } : null}
               flex={1}
               textColor={isReadOnly ? "gray.300" : "primary.200"}
               textAlign={isRightToLeft ? "right" : "left"}

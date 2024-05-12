@@ -26,10 +26,10 @@ export const transliterateFromView = (stringToTransliterate: string, isLatinToPe
         let middleSideStandardString = isLatinToPegon ?
                         transliterateLatinArabToStandardLatin(insideBracket) :
                         transliterateLatinArabToStandardLatin(middleSideString);
-        let rightSideString = isLatinToPegon ? stemLatinToPegon(rightSideBracket, lang) : transliteratePegonToLatin(rightSideBracket, lang);
+        let rightSideString = isLatinToPegon ? stemLatinToPegon(rightSideBracket, lang) : transliteratePegonToLatin(rightSideBracket);
         let rightSideStandardString = isLatinToPegon ?
-                       transliterateReversibleLatinToStandardLatin(rightSideBracket, lang) :
-                       transliterateReversibleLatinToStandardLatin(rightSideString, lang);
+                       transliterateReversibleLatinToStandardLatin(rightSideBracket) :
+                       transliterateReversibleLatinToStandardLatin(rightSideString);
 
         transliterateResult.translitrateResult = leftSideString.translitrateResult + "(" + middleSideString + ")" + rightSideString;
         transliterateResult.standardLatin = leftSideString.standardLatin + "(" + middleSideStandardString + ")" + rightSideStandardString;
@@ -37,11 +37,11 @@ export const transliterateFromView = (stringToTransliterate: string, isLatinToPe
     } else {
         if (isLatinToPegon) {
             transliterateResult.translitrateResult = stemLatinToPegon(stringToTransliterate, lang);
-            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(stringToTransliterate, lang);
+            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(stringToTransliterate);
             return transliterateResult;
         } else {
-            transliterateResult.translitrateResult = transliteratePegonToLatin(stringToTransliterate, lang);
-            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(transliterateResult.translitrateResult, lang);
+            transliterateResult.translitrateResult = transliteratePegonToLatin(stringToTransliterate);
+            transliterateResult.standardLatin = transliterateReversibleLatinToStandardLatin(transliterateResult.translitrateResult);
             return transliterateResult;
         }
     }

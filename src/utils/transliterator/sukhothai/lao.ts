@@ -16,18 +16,6 @@ import {
   asInverse,
   patternList,
   genericIMEInit,
-  fillTemplate,
-  ruleKeyLengthDiff,
-  stringLengthDiff,
-  getKeys,
-  getValues,
-  toSingleWord,
-  toWordBeginning,
-  toWordEnding,
-  after,
-  before,
-  separate,
-  toRegexRule,
 } from "../core";
 
 // O means obsolete
@@ -202,147 +190,121 @@ const Consonants: PlainRule[] = [
   ["'", Lao.OAng],
 ];
 
-const Tones: PlainRule[] = [
-  ["1", Lao.MaiEk],
-  ["2", Lao.MaiTho],
-  ["3", Lao.MaiTri],
-  ["4", Lao.MaiChattawa],
+const ruleKeyLengthDiff = ([a, _]: PlainRule, [b, __]: PlainRule): number =>
+  b.length - a.length;
+
+const LatinConsonants: string[] = Consonants.map(
+  ([key, _]: PlainRule): string => escape(key),
+).sort();
+
+const toVowelOfOpenSyllable = ([key, val]: PlainRule): RegexRule => [
+  new RegExp(`(${patternList(LatinConsonants).source})(${key})`),
+  val,
 ];
 
-const LatinConsonants: string[] = getKeys<PlainRule>(Consonants)
-  .map(escape)
-  .sort(stringLengthDiff);
+const toVowelOfClosedSyllable = ([key, val]: PlainRule): RegexRule => [
+  new RegExp(
+    `(${patternList(LatinConsonants).source})(${key})(${
+      patternList(LatinConsonants).source
+    })`,
+  ),
+  val,
+];
 
-const LatinTones: string[] = getKeys<PlainRule>(Tones).map(escape).sort();
+const OpenSyllableVowelsTemplate: PlainRule[] = [
+  // diphthongs
+  ["iaa", `${Lao._e}$1${Lao.NyoNyungL}`],
+  ["ia", `${Lao._e}$1${Lao.MaiKan}${Lao.NyoNyungL}`],
 
-const LaoConsonants: string[] = getValues<PlainRule>(Consonants)
-  .map(escape)
-  .sort(stringLengthDiff);
+  ["ueaa", `${Lao._e}$1${Lao._uee}${Lao.OAng}`],
+  ["uea", `${Lao._e}$1${Lao._ue}${Lao.OAng}`],
 
-const LaoTones: string[] = getValues<PlainRule>(Tones).map(escape).sort();
+  ["uaa", `$1${Lao.MaiKon}${Lao.WoWiL}`],
+  ["ua", `$1${Lao.MaiKon}${Lao.WoWiL}${Lao.NomNang}`],
 
-const OpenSyllableVowelsTemplate: PlainRule[] = (
-  [
-    // diphthongs
-    ["iaa", `${Lao._e}CT${Lao.NyoNyungL}`],
-    ["ia", `${Lao._e}CT${Lao.MaiKan}${Lao.NyoNyungL}`],
+  // special diphthongs, short
+  ["aii", `${Lao._aii}$1`],
+  ["ai", `${Lao._ai}$1`],
+  ["ao", `${Lao._e}$1${Lao.MaiKon}${Lao.LakKhang}`],
+  ["am", `$1${Lao.Niggahita}${Lao.LakKhang}`],
 
-    ["ueaa", `${Lao._e}CT${Lao._uee}${Lao.OAng}`],
-    ["uea", `${Lao._e}CT${Lao._ue}${Lao.OAng}`],
+  // base vowels, long
+  ["aaw", `$1${Lao.Niggahita}`],
+  ["aae", `${Lao._ae}$1`],
+  ["ooe", `${Lao._e}$1${Lao._ii}`],
+  ["uue", `$1${Lao._uee}${Lao.OAng}`],
+  ["aa", `$1${Lao.LakKhang}`],
+  ["ee", `${Lao._e}$1`],
+  ["ii", `$1${Lao._ii}`],
+  ["oo", `${Lao._o}$1`],
+  ["uu", `$1${Lao._uu}`],
 
-    ["uaa", `CT${Lao.MaiKon}${Lao.WoWiL}`],
-    ["ua", `CT${Lao.MaiKon}${Lao.WoWiL}${Lao.NomNang}`],
+  // base vowels, short
+  ["ae", `${Lao._ae}$1${Lao.NomNang}`],
+  ["aw", `${Lao._e}$1${Lao.LakKhang}${Lao.NomNang}`],
+  ["oe", `${Lao._e}$1${Lao._ii}`],
+  ["ue", `$1${Lao._ue}`],
+  ["i", `$1${Lao._i}`],
+  ["u", `$1${Lao._u}`],
+  ["o", `${Lao._o}$1${Lao.NomNang}`],
+  ["e", `${Lao._e}$1${Lao.NomNang}`],
+  ["a", `$1${Lao.NomNang}`],
+];
 
-    // special diphthongs, short
-    ["aii", `${Lao._aii}CT`],
-    ["ai", `${Lao._ai}CT`],
-    ["ao", `${Lao._e}CT${Lao.MaiKon}${Lao.LakKhang}`],
-    ["am", `CT${Lao.Niggahita}${Lao.LakKhang}`],
+const OpenSyllableVowels: RegexRule[] = OpenSyllableVowelsTemplate.sort(
+  ruleKeyLengthDiff,
+).map(toVowelOfOpenSyllable);
 
-    // base vowels, long
-    ["^oo", `${Lao._o}CT`],
-    ["aae", `${Lao._ae}CT`],
-    ["ooe", `${Lao._e}CT${Lao._ii}`],
-    ["uue", `CT${Lao._uee}${Lao.OAng}`],
-    ["aa", `CT${Lao.LakKhang}`],
-    ["ee", `${Lao._e}CT`],
-    ["ii", `CT${Lao._ii}`],
-    ["oo", `CT${Lao.Niggahita}`],
-    ["uu", `CT${Lao._uu}`],
+const ClosedSyllableVowelsTemplate: PlainRule[] = [
+  // diphthongs
+  ["iaa", `$1${Lao.NyoFyangSemi}$3`],
+  ["ia", `$1${Lao.MaiKan}${Lao.NyoFyangSemi}$3`],
 
-    // base vowels, short
-    ["ae", `${Lao._ae}CT${Lao.NomNang}`],
-    ["^o", `${Lao._o}CT${Lao.NomNang}`],
-    ["oe", `${Lao._e}CT${Lao._ii}`],
-    ["ue", `CT${Lao._ue}`],
-    ["i", `CT${Lao._i}`],
-    ["u", `CT${Lao._u}`],
-    ["o", `${Lao._e}CT${Lao.LakKhang}${Lao.NomNang}`],
-    ["e", `${Lao._e}CT${Lao.NomNang}`],
-    ["a", `CT${Lao.NomNang}`],
-  ] as PlainRule[]
-).map(([key, val]: PlainRule): PlainRule => ["CT" + key, val] as PlainRule);
+  ["ueaa", `${Lao._e}$1${Lao._uee}${Lao.OAng}`],
+  ["uea", `${Lao._e}$1${Lao._ue}${Lao.OAng}`],
 
-const OpenSyllableVowels: RegexRule[] = fillTemplate(
-  prepareRules(
-    OpenSyllableVowelsTemplate.sort(ruleKeyLengthDiff),
-  ) as PlainRule[],
-  [
-    ["C", `((${patternList(LatinConsonants).source})+)`],
-    ["T", `(${patternList(LatinTones).source})?`],
-  ],
-  [
-    ["C", "$1"],
-    ["T", "$3"],
-  ],
-).map(toSingleWord);
+  ["uaa", `$1${Lao.WoWiL}$3`],
+  ["ua", `$1${Lao.MaiKan}${Lao.WoWiL}$3`],
 
-const ClosedSyllableVowelsTemplate: PlainRule[] = (
-  [
-    // diphthongs
-    ["iaa", `CT${Lao.NyoFyangSemi}X`],
-    ["ia", `CT${Lao.MaiKan}${Lao.NyoFyangSemi}X`],
+  // base vowels, long
+  ["aaw", `$1${Lao.OAng}$3`],
+  ["aae", `${Lao._ae}$1$3`],
+  ["ooe", `${Lao._e}$1${Lao._ii}$3`],
+  ["uue", `$1${Lao._uee}${Lao.OAng}$3`],
+  ["aa", `$1${Lao.LakKhang}$3`],
+  ["ee", `${Lao._e}$1$3`],
+  ["ii", `$1${Lao._ii}$3`],
+  ["oo", `${Lao._o}$1$3`],
+  ["uu", `$1${Lao._uu}$3`],
 
-    ["ueaa", `${Lao._e}CT${Lao._uee}${Lao.OAng}`],
-    ["uea", `${Lao._e}CT${Lao._ue}${Lao.OAng}`],
+  // base vowels, short
+  ["ae", `${Lao._ae}$1${Lao.MaiKan}$3`],
+  ["aw", `$1${Lao.MaiKan}${Lao.OAng}$3`],
+  ["ue", `$1${Lao._ue}$3`],
+  ["i", `$1${Lao._i}$3`],
+  ["u", `$1${Lao._u}$3`],
+  ["o", `$1${Lao.MaiKon}$3`],
+  ["e", `${Lao._e}$1${Lao.MaiKan}$3`],
+  ["a", `$1${Lao.MaiKan}$3`],
+];
 
-    ["uaa", `CT${Lao.WoWiL}X`],
-    ["ua", `CT${Lao.MaiKan}${Lao.WoWiL}X`],
-
-    // base vowels, long
-    ["^oo", `${Lao._o}CTX`],
-    ["aae", `${Lao._ae}CTX`],
-    ["ooe", `${Lao._e}CT${Lao._ii}X`],
-    ["uue", `CT${Lao._uee}${Lao.OAng}X`],
-    ["aa", `CT${Lao.LakKhang}X`],
-    ["ee", `${Lao._e}CTX`],
-    ["ii", `CT${Lao._ii}X`],
-    ["uu", `CT${Lao._uu}X`],
-    ["oo", `CT${Lao.OAng}X`],
-
-    // base vowels, short
-    ["ae", `${Lao._ae}CT${Lao.MaiKan}X`],
-    ["^o", `CT${Lao.MaiKon}X`],
-    ["ue", `CT${Lao._ue}X`],
-    ["o", `CT${Lao.MaiKan}${Lao.OAng}X`],
-    ["i", `CT${Lao._i}X`],
-    ["u", `CT${Lao._u}X`],
-    ["e", `${Lao._e}CT${Lao.MaiKan}X`],
-    ["a", `CT${Lao.MaiKan}X`],
-  ] as PlainRule[]
-).map(([key, val]: PlainRule): PlainRule => ["CT" + key + "X", val]);
-
-const ClosedSyllableVowels: RegexRule[] = fillTemplate(
-  prepareRules(
-    ClosedSyllableVowelsTemplate.sort(ruleKeyLengthDiff),
-  ) as PlainRule[],
-  [
-    ["C", `((${patternList(LatinConsonants).source})+)`],
-    ["T", `(${patternList(LatinTones).source})?`],
-    ["X", `(${patternList(LatinConsonants).source})`],
-  ],
-  [
-    ["C", `$1`],
-    ["T", `$3`],
-    ["X", `$4`],
-  ],
-).map(toSingleWord);
+const ClosedSyllableVowels: RegexRule[] = ClosedSyllableVowelsTemplate.sort(
+  ruleKeyLengthDiff,
+).map(toVowelOfClosedSyllable);
 
 const Punctuation: PlainRule[] = [
-  ["-", "\u200C"],
   [" ", "\u200C"],
   [".", " "],
+  [`${Lao.PaiyanNoi}${Lao.LoLingL}${Lao.PaiyanNoi}`, " etc"],
 ];
 
-const InversePunctuation: PlainRule[] = chainRule<PlainRule>(
-  asInverse(Punctuation.reverse()),
-  [
-    [`${Lao.PaiyanNoi}${Lao.LoLingL}${Lao.PaiyanNoi}`, " etc"],
-    [Lao.MaiYamok, "2"],
-    [Lao.PaiyanNoi, "."],
-    ["\\.", ". "],
-  ],
-);
+const InversePunctuation: PlainRule[] = [
+  [Lao.MaiYamok, "2"],
+  [Lao.PaiyanNoi, "."],
+  [" ", "."],
+  ["\u200C", " "],
+  ["etc", `${Lao.PaiyanNoi}${Lao.LoLingL}${Lao.PaiyanNoi}`],
+];
 
 const Numbers: PlainRule[] = [
   ["0", Lao.Zero],
@@ -357,12 +319,14 @@ const Numbers: PlainRule[] = [
   ["9", Lao.Nine],
 ];
 
+// TODO: special single word spellings
+// TODO: circumfix vowels wrapping around an inherent vowel consonants behind them
+// TODO: TONES
+// TODO: NomNang only for last syllables
+
 const FromLatinScheme: Rule[] = chainRule<Rule>(
   ClosedSyllableVowels,
   OpenSyllableVowels,
-  Tones.map(
-    (rule: PlainRule): RegexRule => after(patternList(LatinConsonants), rule),
-  ),
   prepareRules(Consonants.sort(ruleKeyLengthDiff)),
   Numbers,
   prepareRules(Punctuation),
@@ -371,23 +335,109 @@ const FromLatinScheme: Rule[] = chainRule<Rule>(
 export const fromLatin = (input: string): string =>
   transliterate(input, FromLatinScheme);
 
-const InverseSyllableVowels: RegexRule[] = fillTemplate(
-  chainRule<PlainRule>(
-    asInverse(ClosedSyllableVowelsTemplate).sort(ruleKeyLengthDiff),
-    asInverse(OpenSyllableVowelsTemplate).sort(ruleKeyLengthDiff),
-    [["CT", "CTa"]],
-  ),
+const LaoConsonants: string[] = Consonants.map(([_, val]: PlainRule): string =>
+  escape(val),
+).sort();
+
+// do NOT use "C" to denote anything other than consonants on the left side of the rule here!
+const InverseSyllableVowels: RegexRule[] = chainRule<RegexRule>(
+  ClosedSyllableVowelsTemplate.map(
+    ([key, val]: PlainRule): PlainRule => [val.replace(/(\$1|\$3)/g, `C`), key],
+  )
+    .sort(ruleKeyLengthDiff)
+    .map(
+      ([key, val]: PlainRule): RegexRule => [
+        new RegExp(key.replace(/C/g, `(${patternList(LaoConsonants).source})`)),
+        `$1${val}$2 `,
+      ],
+    ),
+  OpenSyllableVowelsTemplate.map(
+    ([key, val]: PlainRule): PlainRule => [val.replace(/\$1/g, `C`), key],
+  )
+    .sort(ruleKeyLengthDiff)
+    .map(
+      ([key, val]: PlainRule): RegexRule => [
+        new RegExp(key.replace(/C/g, `(${patternList(LaoConsonants).source})`)),
+        `$1${val} `,
+      ],
+    ),
   [
-    ["C", `((${patternList(LaoConsonants).source})+)`],
-    ["T", `(${patternList(LaoTones).source})?`],
-    ["X", `(${patternList(LaoConsonants).source})`],
+    [
+      new RegExp(
+        `(?<![${Lao._aii}${Lao._ai}${Lao._o}${Lao._e}aiueo])(${
+          patternList(LaoConsonants).source
+        })(?![aiueo])`,
+      ),
+      "a",
+    ],
   ],
-  [
-    ["C", `$1`],
-    ["T", `$3`],
-    ["X", `$4`],
-  ],
-).map(toSingleWord);
+
+  // open, with nomnang first
+  // diphthongs
+  // [
+  //   [`${Lao._e}(C)${Lao._ii}${Lao.YoYakL}${Lao.NomNang}`, "ia"],
+  //   [`${Lao._e}(C)${Lao._uee}${Lao.OAng}${Lao.NomNang}`, "uea"],
+  //   [`(C)${Lao.MaiKon}${Lao.WoWiL}${Lao.NomNang}`, "ua"],
+
+  //   // base vowels, short
+  //   [`${Lao._ae}(C)${Lao.NomNang}`, "ae"],
+  //   [`${Lao._e}(C)${Lao.LakKhang}${Lao.NomNang}`, "aw"],
+  //   [`${Lao._e}(C)${Lao.OAng}${Lao.NomNang}`, "oe"],
+  //   [`${Lao._o}(C)${Lao.NomNang}`, "o"],
+  //   [`${Lao._e}(C)${Lao.NomNang}`, "e"],
+  //   // open, no nomnang
+  //   // diphthongs
+  //   [`${Lao._e}(C)${Lao._ii}${Lao.YoYakL}`, "iaa"],
+  //   [`${Lao._e}(C)${Lao._uee}${Lao.OAng}`, "ueaa"],
+  //   [`(C)${Lao.MaiKon}${Lao.WoWiL}`, "uaa"],
+
+  //   [`${Lao._ai}(C)${Lao.YoYakL}`, "aiy"],
+  //   [`${Lao._aii}(C)`, "aii"],
+  //   [`${Lao._ai}(C)`, "ai"],
+
+  //   // phonetic diphthongs, long
+  //   [`${Lao._e}(C)${Lao.WoWiL}`, "eeo"],
+  //   [`${Lao._ae}(C)${Lao.WoWiL}`, "aaeo"],
+  //   [`(C)${Lao.LakKhang}${Lao.WoWiL}`, "aao"],
+  //   [`${Lao._e}(C)${Lao._ii}${Lao.YoYakL}${Lao.WoWiL}`, "iaao"],
+  //   [`(C)${Lao.LakKhang}${Lao.YoYakL}`, "aay"],
+  //   [`(C)${Lao.OAng}${Lao.YoYakL}`, "aawy"],
+  //   [`${Lao._o}(C)${Lao.YoYakL}`, "ooy"],
+  //   [`${Lao._e}(C)${Lao.YoYakL}`, "ooey"],
+  //   [`(C)${Lao.MaiKon}${Lao.WoWiL}${Lao.YoYakL}`, "uaay"],
+  //   [`${Lao._e}(C)${Lao._uee}${Lao.OAng}${Lao.YoYakL}`, "ueaai"],
+  //   // phonetic diphthongs, short
+  //   [`(C)${Lao._i}${Lao.WoWiL}`, "io"],
+  //   [`${Lao._e}(C)${Lao.MaiKon}${Lao.WoWiL}`, "eo"],
+  //   [`${Lao._e}(C)${Lao.LakKhang}`, "ao"],
+  //   [`(C)${Lao.MaiKon}${Lao.YoYakL}`, "ay"], // this should actually be capturable by the closed syllable regex but for completion's sake
+  //   [`(C)${Lao.MaiTaikhu}${Lao.OAng}${Lao.YoYakL}`, "awy"],
+  //   [`(C)${Lao._u}${Lao.YoYakL}`, "uy"],
+  //   // base vowels, long
+  //   [`(C)${Lao.OAng}`, "aaw"],
+  //   [`${Lao._ae}(C)`, "aae"],
+  //   [`${Lao._e}(C)${Lao.OAng}`, "ooe"],
+  //   [`(C)${Lao._uee}${Lao.OAng}`, "uue"],
+  //   [`(C)${Lao.LakKhang}`, "aa"],
+  //   [`${Lao._e}(C)`, "ee"],
+  //   [`(C)${Lao._ii}`, "ii"],
+  //   [`${Lao._o}(C)`, "oo"],
+  //   [`(C)${Lao._uu}`, "uu"],
+
+  //   // base vowels, short
+  //   [`(C)${Lao._ue}`, "ue"],
+  //   [`(C)${Lao._i}`, "i"],
+  //   [`(C)${Lao._u}`, "u"],
+  //   [`(?<![${Lao._aii}${Lao._ai}${Lao._o}${Lao._e}aiueo])(C)(?![aiueo])`, "a"],
+  // ].map(
+  //   ([key, val]: PlainRule): RegexRule => [
+  //     new RegExp(
+  //       key.replace(/\(C\)/g, `(${patternList(LaoConsonants).source})`),
+  //     ),
+  //     `$1${val} `,
+  //   ],
+  // ),
+);
 
 const ToLatinScheme: Rule[] = chainRule<Rule>(
   InversePunctuation,
@@ -416,12 +466,11 @@ const StandardLatinVowels: PlainRule[] = [
   ["am", "am"],
 
   // base vowels, long
-  ["^oo", "ô̄"],
-  ["^o", "ô"],
-  ["oo", "ō"],
+  ["o", "ô"],
+  ["aaw", "ō"],
   ["aae", "è̄"],
   ["ooe", "ēu"],
-  ["uue", "ư̄"],
+  ["uue", "ūe"],
   ["aa", "ā"],
   ["ee", "é̄"],
   ["ii", "ī"],
@@ -430,16 +479,16 @@ const StandardLatinVowels: PlainRule[] = [
 
   // base vowels, short
   ["ae", "è"],
-  ["o", "o"],
+  ["aw", "o"],
   ["oe", "eu"],
-  ["ue", "ư"],
+  ["ue", "ue"],
   ["i", "i"],
   ["u", "u"],
   ["e", "é"],
   ["a", "a"],
 ];
 
-const StandardLatinFinalConsonants: PlainRule[] = [
+const StandardLatinFinalConsonants: Rule[] = asWordEnding([
   ["k_h/", ""],
   ["k_h\\", ""],
 
@@ -483,130 +532,14 @@ const StandardLatinFinalConsonants: PlainRule[] = [
   ["l\\", ""],
   ["l/", ""],
 
-  ["w\\", "w"],
-  ["w/", "w"],
+  ["w\\", "o"],
+  ["w/", "o"],
 
   ["h/", ""],
   ["h\\", ""],
 
   ["'", ""],
-];
-
-const StandardLatinSonorantFinals: string[] = ["ng", "m", "n", "w", "y"];
-const StandardLatinStopFinals: string[] = ["p", "t", "k"];
-
-// v is short vowel, V is long vowel, W is any vowel
-// S is sonorant, P is stop/plosive
-// consonants: M is mid, L is low, H is high
-// tone markers: l: low, f: falling, h: high, r: rising, m: mid
-// no tone goes first so that it matches the narrowest rule
-// in case any of the other rules reduce the tones and
-// make the diacritic disappear
-const StandardLatinTonesTemplate: PlainRule[] = [
-  // no tone mark
-  // plosive, long vowel
-  ["HVP", "HVlfP"],
-  ["MVP", "MVlfP"],
-  ["LvP", "LVhfP"],
-  // plosive, short vowel
-  ["HvP", "HvhP"],
-  ["MvP", "MvhP"],
-  ["LvP", "LvmP"],
-  // sonorant
-  ["HWS", "HWrS"],
-  ["MWS", "MWrS"],
-  ["LWS", "LWhS"],
-  // no final consonant
-  ["HWX", "HWr"],
-  ["MWX", "MWr"],
-  ["LWX", "LWh"],
-  // mai chattawa / tone 4
-  ["C4W", "CWr"],
-  // mai tri / tone 3
-  ["C3W", "CWh"],
-  // mai tho / tone 2
-  ["H2W", "HWlf"],
-  ["M2W", "MWhf"],
-  ["L2W", "LWhf"],
-  // mai ek / tone 1
-  ["H1W", "HWm"],
-  ["M1W", "MWm"],
-  ["L1W", "LWm"],
-];
-
-const LatinHighConsonants: string[] = [];
-const LatinMidConsonants: string[] = [];
-const LatinLowConsonants: string[] = [];
-
-for (const consonant of LatinConsonants) {
-  if (consonant.endsWith("/")) {
-    LatinHighConsonants.push(consonant);
-  } else if (consonant.endsWith("\\")) {
-    LatinLowConsonants.push(consonant);
-  } else {
-    LatinMidConsonants.push(consonant);
-  }
-}
-
-const StandardLatinAllVowels: string[] =
-  getValues(StandardLatinVowels).sort(stringLengthDiff);
-
-const [StandardLatinLongVowels, StandardLatinShortVowels] = separate<string>(
-  StandardLatinAllVowels,
-  (vowel: string): boolean => vowel.includes("\u0304"), // macron symbol, i.e. ̄
-);
-
-const StandardLatinTones: Rule[] = fillTemplate(
-  StandardLatinTonesTemplate,
-  [
-    ["H", `(${patternList(LatinHighConsonants).source})`],
-    ["M", `(${patternList(LatinMidConsonants).source})`],
-    ["L", `(${patternList(LatinLowConsonants).source})`],
-    ["C", `(${patternList(LatinConsonants).source})`],
-
-    ["V", `(${patternList(StandardLatinLongVowels).source})`],
-    ["v", `(${patternList(StandardLatinShortVowels).source})`],
-    ["W", `(${patternList(StandardLatinAllVowels).source})`],
-
-    ["P", `(${patternList(StandardLatinStopFinals).source})`],
-    ["S", `(${patternList(StandardLatinSonorantFinals).source})`],
-    ["X", `(?=$|[${wordDelimitingPatterns}])`],
-  ],
-  [
-    ["r", "\u030C"], // caron
-    ["m", ""],
-    ["lf", "\u1DC6"], // macron-grave
-    ["l", "\u0300"], // grave
-    ["hf", "\u0302"], // circumflex
-    ["h", "\u0301"], // acute
-
-    ["H", "$1"],
-    ["M", "$1"],
-    ["L", "$1"],
-    ["C", "$1"],
-
-    ["V", "$2"],
-    ["v", "$2"],
-    ["W", "$2"],
-
-    ["P", "$3"],
-    ["S", "$3"],
-  ],
-).map(toRegexRule);
-
-const MonographStandardLatinVowel: string[] = StandardLatinAllVowels.filter(
-  (v: string): boolean => v.length == 1,
-);
-
-const StandardLatinDiacriticRepositioning: RegexRule[] = fillTemplate(
-  [["(V)(\u0304)?((W)+)(X)", "$1$2$5$3"]],
-  [
-    ["V", patternList(MonographStandardLatinVowel).source],
-    ["W", patternList(["m", ...MonographStandardLatinVowel]).source],
-    ["X", patternList(["\u030C", "\u0300", "\u0301", "\u0302"]).source],
-  ],
-  [],
-).map(toRegexRule);
+]);
 
 const StandardLatinConsonants: Rule[] = [
   ["k_h/", "kh"],
@@ -662,16 +595,15 @@ const StandardLatinConsonants: Rule[] = [
 ];
 
 const StandardLatinScheme: Rule[] = chainRule<Rule>(
-  asWordEnding(StandardLatinFinalConsonants),
-  prepareRules(StandardLatinVowels),
-  StandardLatinTones,
+  StandardLatinFinalConsonants,
   prepareRules(StandardLatinConsonants),
-  StandardLatinDiacriticRepositioning,
+  StandardLatinVowels,
+  [[" ", ""]],
 );
 
 export const toStandardLatin = (input: string): string =>
   transliterate(input, StandardLatinScheme);
 
-const IMEScheme: Rule[] = [[" ", "\u200C"]];
+const IMEScheme: Rule[] = [];
 
 export const initIME = genericIMEInit(IMEScheme);
