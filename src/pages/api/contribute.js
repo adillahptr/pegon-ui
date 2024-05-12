@@ -73,21 +73,13 @@ async function handlePostRequest(req, res) {
         .json({ message: "Please fill all the required fields" });
     }
 
-    try {
-      const resp = await axios.post(`${apiEndpoint}/documents`, formData, {
-        headers: {
-          Authorization: `Bearer ${process.env.MASTER_TOKEN}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      
-      return res.status(200).json(resp.data);
-    } catch (error) {
-      if (error.response?.status === 413) {
-        return res.status(413);
-      } else {
-        throw error;
-      }
-    }
+    const resp = await axios.post(`${apiEndpoint}/documents`, formData, {
+      headers: {
+        Authorization: `Bearer ${process.env.MASTER_TOKEN}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.status(200).json(resp.data);
   });
 }

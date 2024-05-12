@@ -14,20 +14,6 @@ import {
   asNotWordBeginning,
   asNotWordEnding,
   asInverse,
-  patternList,
-  genericIMEInit,
-  fillTemplate,
-  ruleKeyLengthDiff,
-  stringLengthDiff,
-  getKeys,
-  getValues,
-  toSingleWord,
-  toWordBeginning,
-  toWordEnding,
-  after,
-  before,
-  separate,
-  toRegexRule,
 } from "../core";
 
 const enum TaiLe {
@@ -64,7 +50,7 @@ const enum TaiLe {
   Ue = "ᥪ",
   Aue = "ᥬ",
   Ai = "ᥭ",
-
+  
   // Special cases vowels
   Aai = "ᥣᥭ",
   Ei = "ᥥᥭ",
@@ -91,6 +77,7 @@ const enum TaiLe {
   tone5 = "ᥳ",
   tone6 = "ᥴ",
 
+
   // numbers
   Zero = "႐",
   Sung = "႑",
@@ -102,16 +89,19 @@ const enum TaiLe {
   Ceet = "႗",
   Peht = "႘",
   Kau = "႙",
+
 }
 
-const tripleConsonants: PlainRule[] = [["t_s_h", TaiLe.Tsha]];
+const tripleConsonants: PlainRule[] = [
+  ["t_s_h", TaiLe.Tsha],
+]
 const dualConsonants: PlainRule[] = [
   ["n_g", TaiLe.Nga],
   ["t_s", TaiLe.Tsa],
   ["t_h", TaiLe.Tha],
   ["p_h", TaiLe.Pha],
   ["k_h", TaiLe.Kha],
-];
+]
 const monoConsonants: PlainRule[] = [
   ["k", TaiLe.Ka],
   ["x", TaiLe.Xa],
@@ -128,74 +118,61 @@ const monoConsonants: PlainRule[] = [
   ["n", TaiLe.Na],
 ];
 
+const tripleConsonantsA: PlainRule[] = [
+  ["t_s_ha", TaiLe.Tsha],
+]
+
+const monoConsonantsA: PlainRule[] = monoConsonants.map(([letter, taiLe]) => {
+  return [letter + 'a', taiLe];
+});
+
+const dualConsonantsA: PlainRule[] = dualConsonants.map(([letter, taiLe]) => {
+  return [letter + 'a', taiLe];
+});
+
+
 const diagraphVowels: PlainRule[] = [
   ["aai", TaiLe.Aai],
-  ["eeu", TaiLe.Eeu],
-  ["^oi", TaiLe.Ooi],
-  ["^ui", TaiLe.Uei],
-  ["^uu", TaiLe.Ueu],
-  ["^eu", TaiLe.Eˆu],
-  ["^ei", TaiLe.Eˆi],
   ["ei", TaiLe.Ei],
   ["ui", TaiLe.Ui],
   ["oi", TaiLe.Oi],
+  ["^oi", TaiLe.Ooi],
+  ["^ui", TaiLe.Uei],
+  ["^ei", TaiLe.Eˆi],
   ["ai", TaiLe.Oo],
   ["au", TaiLe.Au],
   ["iu", TaiLe.Iu],
   ["eu", TaiLe.Eu],
+  ["eeu", TaiLe.Eeu],
   ["ou", TaiLe.Ou],
+  ["^uu", TaiLe.Ueu],
+  ["^eu", TaiLe.Eˆu],
   ["a^u", TaiLe.Oo],
-];
-
-const monographVowelsForEndings: PlainRule[] = [
-  ["ee", TaiLe.Ee],
-  ["^o", TaiLe.Oo],
-  ["^u", TaiLe.Ue],
-  ["^e", TaiLe.Eˆ],
+]
+const monographVowels: PlainRule[] = [
+  ["a", TaiLe.A],
   ["i", TaiLe.I],
   ["e", TaiLe.E],
+  ["ee", TaiLe.Ee],
+  ["^e", TaiLe.Eˆ],
   ["u", TaiLe.U],
   ["o", TaiLe.O],
+  ["^o", TaiLe.Oo],
+  ["^u", TaiLe.Ue],
 ];
 
-const monographVowelsForEndingsAA: PlainRule[] = [["a", TaiLe.A]];
-
-const monographVowelsForEndingsA: PlainRule[] = [["a", ""]];
-
 const FinalConsonants: PlainRule[] = [
-  ["n_g", TaiLe.Nga],
   ["m", TaiLe.Ma],
   ["n", TaiLe.Na],
+  ["n_g", TaiLe.Nga],
   ["p", TaiLe.Pa],
   ["t", TaiLe.Ta],
   ["k", TaiLe.Ka],
-];
+]
 
-const FinalConsonantsVowelsSyllables: PlainRule[] = ruleProduct(
-  chainRule(monographVowelsForEndings, monographVowelsForEndingsA),
-  FinalConsonants,
-);
-
-const FinalConsonantsVowelsSyllablesIndependent: PlainRule[] = ruleProduct(
-  chainRule(monographVowelsForEndingsAA, monographVowelsForEndings),
-  FinalConsonants,
-);
-
-const consonantSyllables: PlainRule[] = ruleProduct(
-  chainRule(tripleConsonants, dualConsonants, monoConsonants),
-  chainRule(
-    FinalConsonantsVowelsSyllables,
-    diagraphVowels,
-    monographVowelsForEndings,
-    monographVowelsForEndingsA,
-  ),
-);
-
-const vowelSyllables: PlainRule[] = chainRule(
-  FinalConsonantsVowelsSyllablesIndependent,
-  diagraphVowels,
-  monographVowelsForEndings,
-  monographVowelsForEndingsAA,
+const FinalConsonantsSyllables: PlainRule[] = ruleProduct(
+  monographVowels,
+  FinalConsonants
 );
 
 const tones: PlainRule[] = [
@@ -204,7 +181,7 @@ const tones: PlainRule[] = [
   ["#4", TaiLe.tone4],
   ["#5", TaiLe.tone5],
   ["#6", TaiLe.tone6],
-];
+]
 
 const numbers: PlainRule[] = [
   ["0", TaiLe.Zero],
@@ -217,21 +194,38 @@ const numbers: PlainRule[] = [
   ["7", TaiLe.Ceet],
   ["8", TaiLe.Peht],
   ["9", TaiLe.Kau],
-];
+]
 
-const sortedConsonantSyllables =
-  asInverse(consonantSyllables).sort(ruleKeyLengthDiff);
-
-const sortedVowelSyllables = asInverse(vowelSyllables).sort(ruleKeyLengthDiff);
 
 const FromLatinScheme: Rule[] = prepareRules(
-  chainRule(consonantSyllables, vowelSyllables, tones, numbers),
+  chainRule(
+    FinalConsonantsSyllables,
+    tripleConsonantsA,
+    dualConsonantsA,
+    monoConsonantsA,
+    tripleConsonants,
+    dualConsonants,
+    monoConsonants,
+    diagraphVowels,
+    monographVowels,
+    tones,
+    numbers
+  ),
 );
 
 const ToLatinScheme: Rule[] = prepareRules(
   chainRule(
-    asInverse(vowelSyllables),
-    sortedConsonantSyllables,
+    // inverse second pass, first
+    asInverse(FinalConsonantsSyllables),
+    asInverse(tripleConsonantsA),
+    asInverse(dualConsonantsA),
+    asInverse(monoConsonantsA),
+    asInverse(tripleConsonants),
+    asInverse(dualConsonants),
+    asInverse(monoConsonants),
+
+    asInverse(diagraphVowels),
+    asInverse(monographVowels),
     asInverse(tones),
     asInverse(numbers),
   ),
@@ -256,8 +250,9 @@ const ReversibleLatinToLatinScheme: Rule[] = [
   ["ee", "è"],
   ["^e", "ə"],
   ["^o", "ó"],
-  ["^u", "î"],
+  ["^u", "î"]
 ];
+
 
 export const fromLatin = (input: string): string =>
   transliterate(input, FromLatinScheme);
@@ -267,7 +262,19 @@ export const toStandardLatin = (input: string): string =>
   transliterate(input, ReversibleLatinToLatinScheme);
 
 const IMEScheme: Rule[] = prepareRules(
-  chainRule(makeTransitive(consonantSyllables, vowelSyllables), tones, numbers),
+  chainRule(
+    makeTransitive(FinalConsonantsSyllables,
+    tripleConsonantsA,
+    dualConsonantsA,
+    monoConsonantsA,
+    tripleConsonants,
+    dualConsonants,
+    monoConsonants),
+    diagraphVowels,
+    monographVowels,
+    tones,
+    numbers
+  ),
 );
 
 export function initIME(): InputMethodEditor {
