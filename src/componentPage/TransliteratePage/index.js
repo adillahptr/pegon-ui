@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import AppLayout from "../Page/AppLayout";
 import Head from "next/head";
 import {
@@ -9,18 +9,16 @@ import {
   Card,
   Stack,
   Divider,
+  Text,
   useDisclosure,
-  Container,
-  Center,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ScriptTypeSelect } from "./Fragments/ScriptTypeSelect";
 import { VariantSelect } from "./Fragments/VariantSelect";
 import { TransliterateInput } from "./Fragments/TransliterateInput";
 import { TransliterationHeader } from "./Fragments/TransliterationHeader";
-import { FaInfo } from "react-icons/fa";
-import { CheatSheetDrawer } from "./Fragments/CheatSheetDrawer";
-import { PegonKeyboard } from "./Fragments/PegonKeyboard";
-import { VirtualKeyboard, checkHasKeyboard } from "./Fragments/VirtualKeyboard";
+import { MdLightbulb } from "react-icons/md";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { scriptsData } from "src/utils/objects";
 
 import {
@@ -48,10 +46,12 @@ import {
   useMakassarTransliterator,
   useThaiTransliterator,
   useLaoTransliterator,
+  useTaiVietTransliterator,
   useKayahLiTransliterator,
   useMonTransliterator,
   useBurmeseTransliterator,
   useKarenTransliterator,
+  useTaiLeTransliterator,
   useCarakanTransliterator,
   useSundaTransliterator,
   useBaliTransliterator,
@@ -92,6 +92,8 @@ const selectTransliterator = (script, variant) => {
           return useKayahLiTransliterator;
         case "S'gaw Karen":
           return useKarenTransliterator;
+        case "Tai Le":
+          return useTaiLeTransliterator;
       }
       break;
     case "Rejang":
@@ -136,6 +138,8 @@ const selectTransliterator = (script, variant) => {
           return useThaiTransliterator;
         case "Lao":
           return useLaoTransliterator;
+        case "Tai Viet":
+          return useTaiVietTransliterator;
       }
       break;
     case "Hanacaraka":
@@ -154,6 +158,8 @@ const selectTransliterator = (script, variant) => {
 };
 
 const TransliteratePage = () => {
+  const router = useRouter();
+
   const [script, setScript] = useState("Pegon");
   const [variant, setVariant] = useState("Indonesia");
   const [inputText, setInputText] = useState("");
@@ -164,13 +170,6 @@ const TransliteratePage = () => {
   const [transliterateHook, setTransliterateHook] = useState(
     () => usePegonIndonesianTransliterator,
   );
-  const inputElementRef = useRef();
-  const [showKeyboard, setShowKeyboard] = useState(false);
-  const [hasKeyboard, setHasKeyboard] = useState(checkHasKeyboard(script));
-
-  const handleShowKeyboard = (event) => {
-    setShowKeyboard(showKeyboard => !showKeyboard)
-  };
 
   const handleScriptChange = (event) => {
     const newScript = event.target.innerText;
@@ -200,15 +199,11 @@ const TransliteratePage = () => {
   };
 
   useEffect(() => {
-    setHasKeyboard(() => checkHasKeyboard(script));
-  }, [script]);
-
-  useEffect(() => {
     setTransliterateHook(() => selectTransliterator(script, variant));
   }, [script, variant]);
 
-  useEffect(() => {
-    const result = transliterateHook(
+  const asyncTransliterate = async () => {
+    let result = await transliterateHook(
       inputText,
       setInputText,
       isLatinInput,
@@ -216,9 +211,25 @@ const TransliteratePage = () => {
     );
     setOutputText(result.outputText);
     setStandardLatin(result.standardLatin);
+  };
+  const getTimeout = (script, variant) => {
+    if (script === "Jawi" && variant === "Malay") {
+      return 2000;
+    } else {
+      return 0;
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(asyncTransliterate(), getTimeout(script, variant));
+    return () => clearTimeout(timer);
   }, [inputText]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleWikiButtonClick = () => {
+    router.push("/app/wiki?script=" + script + "&variant=" + variant);
+  };
 
   return (
     <>
@@ -257,16 +268,11 @@ const TransliteratePage = () => {
             <IconButton
               colorScheme="primary"
               size="sm"
-              icon={<FaInfo />}
+              icon={<MdLightbulb />}
               ml={5}
-              onClick={onOpen}
+              onClick={handleWikiButtonClick}
             />
           </HStack>
-          <CheatSheetDrawer
-            isOpen={isOpen}
-            onClose={onClose}
-            documentScript={script}
-          />
           <VStack
             px={5}
             spacing={0}
@@ -312,9 +318,6 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? standardLatin : null}
-                  inputElementRef={inputElementRef}
-                  hasKeyboard={hasKeyboard}
-                  handleShowKeyboard={handleShowKeyboard}
                 />
                 <TransliterateInput
                   placeholder="Transliteration result"
@@ -328,28 +331,22 @@ const TransliteratePage = () => {
                   variant={variant}
                   isLatinInput={isLatinInput}
                   standardLatin={isLatinInput ? null : standardLatin}
-                  hasKeyboard={hasKeyboard}
-                  handleShowKeyboard={handleShowKeyboard}
                 />
               </Stack>
             </Card>
+            <Text>​</Text>
+            {script === "Jawi" && variant === "Malay" ? (
+              <HStack>
+                <FaExclamationTriangle size={13} />
+                <Text color="gray.400" fontSize="xs">
+                  This feature uses experimental AI technology and may produce
+                  inaccurate results.
+                </Text>
+              </HStack>
+            ) : (
+              ""
+            )}
           </VStack>
-          {showKeyboard && !isLatinInput?
-          <VStack
-            px={10}
-            p={5}
-            spacing={0}
-            w="100%"
-            h="100%"
-          >
-            <VirtualKeyboard
-              script={script}
-              variant={variant}
-              setInputText={setInputText}
-              inputElementRef={inputElementRef}
-            />
-          </VStack> : null
-          }
         </VStack>
       </AppLayout>
     </>
