@@ -8,16 +8,17 @@ const useJawiMalayTransliterator = async (
 ) => {
   const req = {
     text: inputText,
-    mode : isLatinInput ? "/r2j" : "/j2r"
   };
 
-  const apiEndpoint = "/api/trans-jawi" 
+  const baseURL = process.env.NEXT_PUBLIC_ML_API_HOST;
+  const apiEndpoint = isLatinInput ? "/r2j" : "/j2r";
+  const url = baseURL + apiEndpoint;
 
   try {
-    const response = await axios.post(apiEndpoint, req);
+    const response = await axios.post(url, req);
     setIsLoading(true);
     const outputText = isLatinInput ? response.data.jawi : response.data.rumi;
-    return { outputText: outputText, standardLatin: isLatinInput? inputText : outputText };
+    return { outputText };
   } catch (error) {
     console.error("Error: ", error);
     return { outputText: "" };
