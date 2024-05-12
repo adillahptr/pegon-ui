@@ -16966,7 +16966,6 @@ export const kataDasarJawa: string[] = [
     'sahid',
     'sahur',
     'sahwat',
-    'saiki',
     'saing',
     'sait',
     'saya',

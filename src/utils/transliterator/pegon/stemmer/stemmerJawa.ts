@@ -1,11 +1,12 @@
 import type { StemResult } from "./stemmer";
-import { JawaDictionary } from "./jawaDictionary";
+import { RootWordDictionary } from "./rootWordDictionary";
+import { kataDasarJawa } from './data/kataDasarJawa';
 import { StemmerCache } from "./stemmerCache";
 import { normalizeText } from "./textNormalizer";
 import { plainPrefixRule, allomorphRules, plainSuffixRule } from "./jawaStemmingRules";
 
 export class StemmerJawa {
-    private jawaDict = new JawaDictionary()
+    private jawaDict = new RootWordDictionary(kataDasarJawa)
     private cache = new StemmerCache()
 
     public stem(word: string): StemResult {
@@ -36,10 +37,11 @@ class Context {
     private currentWord: string
     private currentRemoved: string[]
     private result: StemResult
-    private dictionary: JawaDictionary
+    private dictionary: RootWordDictionary
     private allomorphIndex = 0;
+    private wordFound = false;
 
-    constructor(originalWord: string, dictionary: JawaDictionary) {
+    constructor(originalWord: string, dictionary: RootWordDictionary) {
         this.originalWord = originalWord
         this.currentWord = originalWord
         this.result = {
@@ -51,12 +53,14 @@ class Context {
     }
 
 
-    public execute(): StemResult {
-        this.stem()
-
-        if ( !this.dictionary.isRootWord(normalizeText(this.currentWord)) ) {
+        public execute(): StemResult {
+        if (this.countSyllable(this.currentWord) <= 2) {
             return this.result
         }
+
+        this.stem()
+        if ( !this.wordFound ) 
+            return this.result
 
         this.removeAllomorphFromSequence()
         this.recodeAffixes()
@@ -66,36 +70,38 @@ class Context {
     }
 
     private stem(): void {
-        if ( this.dictionary.isRootWord(normalizeText(this.currentWord)) )
+        if ( this.dictionary.isRootWord(normalizeText(this.currentWord)) ){
+            this.wordFound = true
             return
+        }
 
         this.removeSuffixes()
 
-        if ( this.dictionary.isRootWord(normalizeText(this.currentWord)) )
+        if ( this.wordFound )
             return
 
         if (this.countSyllable(this.currentWord) <= 2) {
+            if (this.wordFound)
+                return
+
             this.currentWord = this.originalWord
             this.currentRemoved = []
         }
 
         this.removePrefixes()
-        this.checkAllomorf()
 
-        if ( !this.dictionary.isRootWord(normalizeText(this.currentWord)) ) {
+        if ( !this.wordFound ) {
             this.currentWord = this.originalWord
             this.currentRemoved = []
             this.allomorphIndex = 0
 
             this.removePrefixes()
-            this.checkAllomorf()
 
-            if ( this.dictionary.isRootWord(normalizeText(this.currentWord)) )
+            if ( this.wordFound )
                 return
 
             this.removeSuffixes()
         }
-
         return
         
     }
@@ -106,18 +112,24 @@ class Context {
         let temp: string[] = []
 
         for(let i=0; i<3; i++) {
+            this.checkAllomorph();
+            if ( this.wordFound ){
+                this.currentRemoved = [...this.currentRemoved, ...temp]
+                return     
+            }
+
             [res, removed] = plainSuffixRule(this.currentWord)
             if (removed !== '' && !temp.includes(removed)) {
                 this.currentWord = res
-                temp.push(removed)
-                this.currentRemoved = [...temp, ...this.currentRemoved]
-                
-                
+                temp.unshift(removed)
                 if ( this.dictionary.isRootWord(normalizeText(res)) ) {
+                    this.currentRemoved = [...this.currentRemoved, ...temp]
+                    this.wordFound = true
                     return              
                 }
             }
         }
+        this.currentRemoved = [...this.currentRemoved, ...temp]
     }
 
 
@@ -125,23 +137,34 @@ class Context {
         let res: string = this.currentWord
         let removed: string = ''
         let temp: string[] = []
+        let allomorphIndexTemp = this.allomorphIndex
 
         for(let i=0; i<3; i++) {
+            this.checkAllomorph();
+            if ( this.wordFound ){
+                this.currentRemoved = [...temp, ...this.currentRemoved]
+                this.allomorphIndex = allomorphIndexTemp
+                return     
+            }
+
             [res, removed] = plainPrefixRule(this.currentWord)
             if (removed !== '' && !temp.includes(removed)) {
                 this.currentWord = res
                 temp.push(removed)
-                this.currentRemoved = [...temp, ...this.currentRemoved]
-                this.allomorphIndex += 1
+                allomorphIndexTemp += 1
                 
                 if ( this.dictionary.isRootWord(normalizeText(res)) ) {
+                    this.currentRemoved = [...temp, ...this.currentRemoved]
+                    this.allomorphIndex = allomorphIndexTemp
+                    this.wordFound = true
                     return              
                 }
             }
         }
+        this.currentRemoved = [...temp, ...this.currentRemoved]
     }
 
-    private checkAllomorf(): void {
+    private checkAllomorph(): void {
         let res: string = this.currentWord
         let removed: string = ''
         let temp: string[] = []
@@ -156,6 +179,7 @@ class Context {
                 if ( this.dictionary.isRootWord(normalizeText(res)) ) {
                     this.currentWord = res
                     this.currentRemoved.splice(this.allomorphIndex, 0, removed)
+                    this.wordFound = true
                     return              
                 }
             }
