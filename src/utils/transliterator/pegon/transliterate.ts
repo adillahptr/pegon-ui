@@ -250,6 +250,11 @@ const doubleDigraphVowelRules: PlainRule[] = [
 ]
 
 const doubleMonographVowelRulesStandard: PlainRule[] = [
+    ["aO", Pegon.Fatha + Pegon.Alif +
+        Pegon.Alif + Pegon.Fatha + Pegon.Waw],
+    ["aaA-", 
+        Pegon.Fatha + Pegon.Alif + 
+        Pegon.Alif + Pegon.Fatha],
     ["aa", 
         Pegon.Fatha + Pegon.Alif +
         Pegon.AlifWithHamzaAbove + Pegon.Fatha],
@@ -266,6 +271,8 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Kasra + Pegon.Ya],
     ["au", Pegon.Fatha + Pegon.Alif +
         Pegon.Ha + Pegon.Damma + Pegon.Waw],
+    ["a-u-", Pegon.Alif +
+        Pegon.Ha + Pegon.Waw],
     ["a`u", Pegon.Fatha + Pegon.Alif +
         Pegon.Hamza + Pegon.Damma + Pegon.Waw],
     ["a-`u-", Pegon.Alif +
@@ -284,8 +291,6 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.Ha + Pegon.Fatha + Pegon.Waw],
     ["a-o", Pegon.Alif +
         Pegon.Ha + Pegon.Fatha + Pegon.Waw],
-    ["aO", Pegon.Fatha + Pegon.Alif +
-        Pegon.Alif + Pegon.Fatha + Pegon.Waw],
     ["a-O", Pegon.Alif +
         Pegon.Alif + Pegon.Fatha + Pegon.Waw],
     ["ia", Pegon.Kasra + Pegon.Ya +
@@ -446,31 +451,11 @@ const doubleVowelRules: PlainRule[] =
         doubleMonographVowelRules)
 
 const doubleEndingVowelRules: PlainRule[] = [
-    ["au", Pegon.Alif +
-        Pegon.Ha + Pegon.Waw],
     ["ae", Pegon.Alif +
         Pegon.Ha +
         Pegon.Fatha + Pegon.Ya],
-    ["ai", Pegon.Alif +
-        Pegon.Ha +
-        Pegon.Ya],
-    ["ea", Pegon.Fatha + Pegon.Ya +
-        Pegon.Ya +
-        Pegon.Alif],
-    ["^ea", Pegon.MaddaAbove +
-        Pegon.Ya +
-        Pegon.Alif],
-    ["aa", Pegon.Alif +
-        Pegon.Ha +
-        Pegon.Alif],
     ["oa", Pegon.Fatha + Pegon.Waw +
         Pegon.Ha +
-        Pegon.Alif],
-    ["ua", Pegon.Waw +
-        Pegon.Waw +
-        Pegon.Alif],
-    ["ia", Pegon.Ya + 
-        Pegon.Ya +
         Pegon.Alif],
 ]
 
@@ -1074,20 +1059,11 @@ const numbers : PlainRule[] = [
 
 const latinToPegonScheme: Rule[] =
     prepareRules(chainRule(
-        //longEndingAlifWawYaMaksuraRules,
         specialPrepositionAsSingleWordsRule,
 
         closedSyllableWithSoundARules,
 
         prefixWithBeginningVowelAsWordBeginningRules,
-        
-        //doubleVowelSyllableAsWordEndingRules,
-        
-        //doubleMonographVowelAsBeginningSyllableRules,
-        
-        //beginningIWithOpenConsonantAsWordBeginningRules,
-        //beginningIWithDeadConsonantAsWordBeginningRules,
-
 
         beginningSingleVowelAsWordBeginningRules,
 
@@ -1106,20 +1082,11 @@ const latinToPegonScheme: Rule[] =
 
 const latinToPegonSchemeForMoreThanTwoSyllables: Rule[] =
     prepareRules(chainRule(
-        //longEndingAlifWawYaMaksuraRules,
         specialPrepositionAsSingleWordsRule,
 
         closedSyllableWithSoundARules,
 
-        prefixWithBeginningVowelAsWordBeginningRules,
-        
-        //doubleVowelSyllableAsWordEndingRules,
-
-        //doubleMonographVowelAsBeginningSyllableRules,
-        
-        //beginningIWithOpenConsonantAsWordBeginningRules,
-        //beginningIWithDeadConsonantAsWordBeginningRules,
-        
+        prefixWithBeginningVowelAsWordBeginningRules,        
 
         beginningSingleVowelAsWordBeginningRules,
 
@@ -1334,7 +1301,6 @@ const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
         inverseBeginningVowelAsWordBeginningRules,
         inverseShaddaRules,
-        //inverseLongEndingAlifWawYaMaksuraRules,
         inverseSpecialPrepositionAsSingleWordsRules,
         inverseClosedSyllableWithSoundARules,
         inversePrefixWithBeginningVowelsAsWordBeginningRules,

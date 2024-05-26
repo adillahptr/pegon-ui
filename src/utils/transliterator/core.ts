@@ -36,7 +36,6 @@ export const chainRule = <T extends Rule>(...chainOfRules: T[][]): T[] =>
   chainOfRules.reduce<T[]>((acc, rules) => acc.concat(rules), [] as T[]);
 export const wordDelimiters: string[] = [
   " ",
-  ".",
   ",",
   "?",
   "!",

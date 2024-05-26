@@ -69,7 +69,7 @@ export const pegonKeyboardLevel2 = [
   { name: "EndOfAyah", value: "\u06DD", span:1},
   { name: "PegonKasra", value: "\u0650", span:1},
   { name: "PegonKasratan", value: "\u064D", span:1},
-  { name: "PegonSignPepet", value: "\u0897", span:1},
+  { name: "PegonSignPepet", value: "\u08E4", span:1},
   { name: "PegonSukun", value: "\u0652", span:1},
   { name: "PegonAlefMaksura", value: "\u0649", span:1},
   { name: "PegonYehHamzaAbove", value: "\u0626", span:1},
