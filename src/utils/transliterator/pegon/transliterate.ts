@@ -200,6 +200,7 @@ const beginningMonographVowelRules: PlainRule[] = [
     ["`a", Pegon.AlifWithHamzaAbove],
     //["a-", Pegon.Alif],
     ["a", Pegon.Alif + Pegon.Fatha],
+    ["A", Pegon.Alif],
     ["o", Pegon.Alif + Pegon.Fatha + Pegon.Waw],
     ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
     ["i-", Pegon.Alif + Pegon.Ya ],
@@ -359,6 +360,22 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
     ["u-o", Pegon.Waw +
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
+    ["ea-", Pegon.Fatha + Pegon.Ya +
+        Pegon.Ya + Pegon.Alif],
+    ["e.a-", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Alif],
+    ["ea", Pegon.Fatha + Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
+    ["e.a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
+    ["e`a-", Pegon.Fatha + Pegon.Ya +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["e.`a-", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["e`a", Pegon.Fatha + Pegon.Ya +
+        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
+    ["e.`a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
 ]
 
 const vowelsHarakatRules: PlainRule[] = [
