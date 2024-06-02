@@ -175,7 +175,8 @@ const singleVowelRules: PlainRule[] =
         monographVowelHarakatAtFirstAbjadRules)
 
 const singleEndingVowelRules: PlainRule[] = [
-    ["i", Pegon.Ya]
+    ["-i", Pegon.Ya],
+    ["i", Pegon.Kasra + Pegon.Ya]
 ]
 
 const singleVowelAsWordEndingRules: RegexRule[] =
@@ -819,12 +820,17 @@ const baseWordLastLetterVowelSuffixFirstLetterVowel: PlainRule[] =
 const doubleEndingVowelForSuffixRules: PlainRule[] = [
     ["ae", Pegon.Ha + Pegon.Fatha + Pegon.Ya],
     ["ai", Pegon.Ha + Pegon.Ya],
+    ["e-a", Pegon.Ya + Pegon.Alif],
     ["ea", Pegon.Ya + Pegon.Fatha + Pegon.Alif],
     ["^ea", Pegon.Ya + Pegon.Ya + Pegon.Alif],
-    ["aa", Pegon.Ha + Pegon.Alif],
-    ["oa", Pegon.Ha + Pegon.Alif],
-    ["ua", Pegon.Waw + Pegon.Alif],
-    ["ia", Pegon.Ya + Pegon.Alif],
+    ["a-a", Pegon.Ha + Pegon.Alif],
+    ["aa", Pegon.Ha + Pegon.Fatha + Pegon.Alif],
+    ["o-a", Pegon.Ha + Pegon.Alif],
+    ["oa", Pegon.Ha + Pegon.Fatha + Pegon.Alif],
+    ["u-a", Pegon.Waw + Pegon.Alif],
+    ["ua", Pegon.Waw + Pegon.Fatha + Pegon.Alif],
+    ["i-a", Pegon.Ya + Pegon.Alif],
+    ["ia", Pegon.Ya + Pegon.Fatha + Pegon.Alif],
 ]
 
 const jawaPrefixesRules: PlainRule[] = [
@@ -917,7 +923,7 @@ const transliterateJawaSuffixesVowel = (suffix: string, baseWord: string): strin
 }
 
 const transliterateJawaSuffixes = (suffix: string, baseWord: string): string => {
-    if (baseWord[baseWord.length-1].match(/^[aiueoWAY]/) && suffix[0].match(/^[aiueo]/)) {
+    if (baseWord[baseWord.length-1].match(/^[aiueoWAY]/) && suffix[0].match(/^[-aiueo]/)) {
         return transliterateJawaSuffixesVowel(suffix, baseWord)
     }
 
@@ -1053,6 +1059,7 @@ const transliterateJawaAffixes = (affixes: string[], baseWord: string): string[]
     let prefixResult = ''
     let suffixResult = ''
 
+    console.log(affixes, baseWord)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
@@ -1374,7 +1381,6 @@ const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
         inverseBeginningVowelAsWordBeginningRules,
         inverseShaddaRules,
-        inverseFathaHarakatForWawAndYaRules,
         inverseFirstSyllableWithSoundARules,
         inverseSpecialPrepositionAsSingleWordsRules,
         inverseClosedSyllableWithSoundARules,
@@ -1382,6 +1388,7 @@ const initiatePegonToLatinScheme = (): Rule[] => {
         inversePrefixWithSpaceAsWordBeginningRules,
         //inverseDoubleMonographVowelAsBeginningSyllableRules,
         inverseDoubleEndingVowelAsWordEndingRules,
+        inverseFathaHarakatForWawAndYaRules,
         inverseSyllableRules,
         inverseVowelRules,
         inverseConsonantRules,

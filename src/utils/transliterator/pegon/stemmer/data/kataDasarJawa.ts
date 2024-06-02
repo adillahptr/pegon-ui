@@ -20285,7 +20285,6 @@ export const kataDasarJawa: string[] = [
     'wedatama',
     'wedel',
     'wedi',
-    'wedi',
     'wedhi',
     'wedidang',
     'wedhit',
