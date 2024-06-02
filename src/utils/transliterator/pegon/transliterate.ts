@@ -1030,7 +1030,6 @@ const transliterateIndonesianAffixes = (affixes: string[], baseWord: string): st
     let prefixResult = ''
     let suffixResult = ''
 
-    console.log(affixes)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
@@ -1054,7 +1053,6 @@ const transliterateJawaAffixes = (affixes: string[], baseWord: string): string[]
     let prefixResult = ''
     let suffixResult = ''
 
-    console.log(affixes)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
@@ -1144,8 +1142,6 @@ const latinToPegonScheme: Rule[] =
         specialPrepositionAsSingleWordsRule,
 
         closedSyllableWithSoundARules,
-
-        //prefixWithBeginningVowelAsWordBeginningRules,
 
         beginningSingleVowelAsWordBeginningRules,
 
