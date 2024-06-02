@@ -678,7 +678,7 @@ const aForClosedSyllable: PlainRule[] = [
 
 const closedSyllable = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})(?!([_aiueo^\`WAIUEOY]|-a|-u|-i))(.*)`), `${val}`])
+        [new RegExp(`(${key})(?!([_aiueo^\`WAIUEOY]|-a|-u|-i))`), `${val}`])
 
 const consonantForClosedSyllableWithSoundA: PlainRule[] =
     consonantRules.filter(([k,v]) => k !== "w" && k !== "y")
@@ -1145,6 +1145,7 @@ export const transliterateLatinToPegonStemResult = (stemResult: StemResult, lang
     if (lang === "Jawa") {
         // transliterateStemResultJawa
         let base = transliterateLatinToPegon(stemResult.baseWord)
+        console.log(base)
         let [prefix, suffix] = transliterateJawaAffixes(stemResult.affixSequence, stemResult.baseWord)
         return prefix + base + suffix;
     } else if (lang === "Sunda") {
