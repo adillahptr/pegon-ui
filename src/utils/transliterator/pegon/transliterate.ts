@@ -117,6 +117,8 @@ const enum Pegon {
     //Tambahan
     Pepet = "\u08e4",
     Shadda = "\u0651",              //  ّ
+
+    Space = " "
 }
 
 const punctuationRules: PlainRule[] = [
@@ -623,8 +625,10 @@ const doubleVowelSyllableAsWordEndingRules: RegexRule[] =
     asWordEnding(ruleProduct(consonantRules, doubleEndingVowelRules))
 
 const prefixRules: PlainRule[] = [
-    ["dak", Pegon.Dal + Pegon.Fatha + Pegon.Alif + Pegon.Kaf + Pegon.Sukun],
-    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya + Pegon.Sukun]
+    ["dak", Pegon.Dal + Pegon.Fatha + Pegon.Alif + Pegon.Kaf],
+    ["d-ak", Pegon.Dal + Pegon.Alif + Pegon.Kaf],
+    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
+    ["d-i", Pegon.Dal + Pegon.Ya]
 ]
 
 const specialPrepositionRules: PlainRule[] = [
@@ -632,7 +636,7 @@ const specialPrepositionRules: PlainRule[] = [
 ]
 
 const prefixWithSpaceRules: PlainRule[] =
-    prefixRules.map(([key, val]) => [key, val.concat(" ")])
+    prefixRules.map(([key, val]) => [key, val.concat(Pegon.Space)])
 
 const specialPrepositionAsSingleWordsRule: RegexRule[] =
     asSingleWord(specialPrepositionRules)
@@ -707,7 +711,8 @@ const fathaHarakatForWawAndYaRules: PlainRule[] = [
 ]
 
 const indonesianPrefixesRules: PlainRule[] = [
-    ["di", Pegon.Dal + Pegon.Ya],
+    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
+    ["d-i", Pegon.Dal + Pegon.Ya],
     ["k^e", Pegon.Kaf + Pegon.MaddaAbove],
     ["s^e", Pegon.Sin + Pegon.MaddaAbove],
     ["b^er", Pegon.Ba + Pegon.MaddaAbove + Pegon.Ra],
@@ -725,9 +730,18 @@ const indonesianPrefixesRules: PlainRule[] = [
     ["p^e", Pegon.Peh + Pegon.MaddaAbove],
 ]
 
-const transliterateIndonesianPrefixes =
-    (prefix: string): string =>
-        transliterate(prefix, prepareRules(indonesianPrefixesRules));
+const indonesianPrefixesRulesAlt: PlainRule[] = [
+    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya + Pegon.Space],
+    ["d-i", Pegon.Dal + Pegon.Ya + Pegon.Space],
+]
+
+const transliterateIndonesianPrefixes = (prefix: string, baseWord: string): string => {
+    if (baseWord.match(/^[aiu\^eo]/) && prefix.match(/^(d-i|di)/)) {
+        return transliterate(prefix, prepareRules(indonesianPrefixesRulesAlt));
+    }
+
+    return transliterate(prefix, prepareRules(indonesianPrefixesRules));
+}
 
 const indonesianSuffixes: PlainRule[] = [
     ["ku", Pegon.Kaf + Pegon.Waw],
@@ -814,43 +828,49 @@ const doubleEndingVowelForSuffixRules: PlainRule[] = [
 ]
 
 const jawaPrefixesRules: PlainRule[] = [
-    ["di", Pegon.Dal + Pegon.Ya],
+    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
+    ["d-i", Pegon.Dal + Pegon.Ya],
     ["su", Pegon.Sin + Pegon.Waw],
     ["pri", Pegon.Peh + Pegon.Ra + Pegon.Ya],
     ["wi", Pegon.Waw + Pegon.Ya],
     ["k^e", Pegon.Kaf + Pegon.MaddaAbove],
-    ["sa", Pegon.Sin + Pegon.Fatha],
+    ["sa", Pegon.Sin + Pegon.Fatha + Pegon.Alif],
+    ["s-a", Pegon.Sin + Pegon.Alif],
     ["dak", Pegon.Dal + Pegon.Fatha + Pegon.Kaf],
-    ["da", Pegon.Dal + Pegon.Fatha],
+    ["d-ak", Pegon.Dal + Pegon.Kaf],
+    ["da", Pegon.Dal + Pegon.Fatha + Pegon.Alif],
     ["tar", Pegon.Ta + Pegon.Fatha + Pegon.Ra],
     ["tak", Pegon.Ta + Pegon.Fatha + Pegon.Kaf],
-    ["ta", Pegon.Ta + Pegon.Fatha],
+    ["ta", Pegon.Ta + Pegon.Fatha + Pegon.Alif],
     ["kok", Pegon.Kaf + Pegon.Fatha + Pegon.Waw + Pegon.Kaf],
     ["ko", Pegon.Kaf + Pegon.Fatha + Pegon.Waw],
     ["tok", Pegon.Ta + Pegon.Fatha + Pegon.Waw + Pegon.Kaf],
     ["to", Pegon.Ta + Pegon.Fatha + Pegon.Waw],
     ["pi", Pegon.Peh + Pegon.Ya],
-    ["kami", Pegon.Kaf + Pegon.Fatha + Pegon.Mim + Pegon.Ya],
-    ["kapi", Pegon.Kaf + Pegon.Fatha + Pegon.Peh + Pegon.Ya],
+    ["kami", Pegon.Kaf + Pegon.Fatha + Pegon.Alif + Pegon.Mim + Pegon.Ya],
+    ["kapi", Pegon.Kaf + Pegon.Fatha + Pegon.Alif + Pegon.Peh + Pegon.Ya],
     ["kuma", Pegon.Kaf + Pegon.Waw + Pegon.Mim + Pegon.Fatha],
-    ["ka", Pegon.Kaf + Pegon.Fatha],
-    ["pra", Pegon.Peh + Pegon.Ra + Pegon.Fatha],
+    ["ka", Pegon.Kaf + Pegon.Fatha + Pegon.Alif],
+    ["k-a", Pegon.Kaf + Pegon.Alif],
+    ["pra", Pegon.Peh + Pegon.Ra + Pegon.Fatha + Pegon.Alif],
     ["pan_g", Pegon.Peh + Pegon.Fatha + Pegon.Nga],
     ["pan", Pegon.Peh + Pegon.Fatha + Pegon.Nun],
     ["pam", Pegon.Peh + Pegon.Fatha + Pegon.Mim],
-    ["pa", Pegon.Peh + Pegon.Fatha],
+    ["pa", Pegon.Peh + Pegon.Fatha + Pegon.Alif],
     ["man_g", Pegon.Mim + Pegon.Fatha + Pegon.Nga],
     ["man", Pegon.Mim + Pegon.Fatha + Pegon.Nun],
     ["mam", Pegon.Mim + Pegon.Fatha + Pegon.Mim],
-    ["ma", Pegon.Mim + Pegon.Fatha],
+    ["ma", Pegon.Mim + Pegon.Fatha + Pegon.Alif],
     ["m^en_g", Pegon.Mim + Pegon.MaddaAbove + Pegon.Nga],
     ["m^en", Pegon.Mim + Pegon.MaddaAbove + Pegon.Nun],
     ["m^em", Pegon.Mim + Pegon.MaddaAbove + Pegon.Mim],
     ["m^e", Pegon.Mim + Pegon.MaddaAbove],
     ["an_g", Pegon.Ha + Pegon.Fatha + Pegon.Nga],
+    ["-am", Pegon.Ha + Pegon.Mim],
     ["am", Pegon.Ha + Pegon.Fatha + Pegon.Mim],
     ["an", Pegon.Ha + Pegon.Fatha + Pegon.Nun],
     ["a", Pegon.Ha + Pegon.Fatha],
+    ["den", Pegon.Dal + Pegon.Fatha + Pegon.Ya + Pegon.Nun + Pegon.Space],
 ]
 
 const jawaSuffixesRules: PlainRule[] = [
@@ -864,9 +884,20 @@ const jawaSuffixesRules: PlainRule[] = [
     ["a", Pegon.Alif],
 ]
 
-const transliterateJawaPrefixes =
-    (prefix: string): string =>
-        transliterate(prefix, prepareRules(jawaPrefixesRules));
+const jawaPrefixesRulesAlt: PlainRule[] = [
+    ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya + Pegon.Space],
+    ["d-i", Pegon.Dal + Pegon.Ya + Pegon.Space],
+    ["dak", Pegon.Dal + Pegon.Fatha + Pegon.Kaf + Pegon.Space],
+    ["d-ak", Pegon.Dal + Pegon.Kaf + Pegon.Space],
+]
+
+const transliterateJawaPrefixes = (prefix: string, baseWord: string): string => {
+    if (baseWord.match(/^[aiu\^eo]/) && prefix.match(/^(d-ak|dak|d-i|di)/)) {
+        return transliterate(prefix, prepareRules(jawaPrefixesRulesAlt));
+    }
+
+    return transliterate(prefix, prepareRules(jawaPrefixesRules));
+}
 
 const transliterateJawaSuffixesVowel = (suffix: string, baseWord: string): string => {
     const jawaSuffixesRulesAlt: PlainRule[] = [
@@ -999,12 +1030,13 @@ const transliterateIndonesianAffixes = (affixes: string[], baseWord: string): st
     let prefixResult = ''
     let suffixResult = ''
 
+    console.log(affixes)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
 
         if (prefixMatches) {
-            prefixResult += transliterateIndonesianPrefixes(prefixMatches[1])
+            prefixResult += transliterateIndonesianPrefixes(prefixMatches[1], baseWord)
         }
 
         else if (suffixMatches) {
@@ -1022,12 +1054,13 @@ const transliterateJawaAffixes = (affixes: string[], baseWord: string): string[]
     let prefixResult = ''
     let suffixResult = ''
 
+    console.log(affixes)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
 
         if (prefixMatches) {
-            prefixResult += transliterateJawaPrefixes(prefixMatches[1])
+            prefixResult += transliterateJawaPrefixes(prefixMatches[1], baseWord)
         }
 
         else if (suffixMatches) {
@@ -1112,7 +1145,7 @@ const latinToPegonScheme: Rule[] =
 
         closedSyllableWithSoundARules,
 
-        prefixWithBeginningVowelAsWordBeginningRules,
+        //prefixWithBeginningVowelAsWordBeginningRules,
 
         beginningSingleVowelAsWordBeginningRules,
 
@@ -1145,7 +1178,6 @@ export const transliterateLatinToPegonStemResult = (stemResult: StemResult, lang
     if (lang === "Jawa") {
         // transliterateStemResultJawa
         let base = transliterateLatinToPegon(stemResult.baseWord)
-        console.log(base)
         let [prefix, suffix] = transliterateJawaAffixes(stemResult.affixSequence, stemResult.baseWord)
         return prefix + base + suffix;
     } else if (lang === "Sunda") {
@@ -1336,9 +1368,9 @@ const inverseFathaHarakatForWawAndYa: PlainRule[] =
 const inverseFathaHarakatForWawAndYaRules: PlainRule[] =
     ruleProduct(inverseOpenConsonantRules, 
         chainRule(
-            ruleProduct(inverseFathaHarakatForWawAndYa, inverseVowelsHarakatRules),
             ruleProduct(inverseFathaHarakatForWawAndYa, inverseDigraphVowelRules),
             ruleProduct(inverseFathaHarakatForWawAndYa, inverseMonographVowelRules),
+            ruleProduct(inverseFathaHarakatForWawAndYa, inverseVowelsHarakatRules),
         )
     )
 
@@ -1366,7 +1398,6 @@ const initiatePegonToLatinScheme = (): Rule[] => {
 
 export const transliteratePegonToLatin = (pegonString: string, lang: string = "Indonesia"): string => {
     console.log(inverseFathaHarakatForWawAndYaRules)
-    console.log(fathaHarakatForWawAndYaRules)
     initiateDoubleMonographVowelRules(lang);
     const pegonToLatinScheme: Rule[] = initiatePegonToLatinScheme();
     return transliterate(pegonString, pegonToLatinScheme)

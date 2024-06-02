@@ -5097,6 +5097,7 @@ export const kataDasarJawa: string[] = [
     'elok',
     'elu',
     'elur',
+    'elus',
     'em',
     'emah',
     'email',
