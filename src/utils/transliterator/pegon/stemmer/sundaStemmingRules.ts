@@ -5,7 +5,7 @@ export const plainPrefixRule = (input: string): [string, string] => {
     if (matches) {
         return ['n_g'+matches[3]+matches[4], matches[1]+'-']
     }
-    regex = /^(pan_g|tin_g|ba|di|ka|pa|pika|pi|sa|si|ti|man_g|mika|mi)(.*)/
+    regex = /^(pan_g|tin_g|ba|di|d-i|ka|k-a|pa|pika|pi|sa|s-a|si|ti|man_g|mika|mi)(.*)/
     matches = input.match(regex)
     if (matches) {
         return [matches[2], matches[1]+'-']

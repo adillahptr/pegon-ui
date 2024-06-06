@@ -6,7 +6,7 @@ export const plainPrefixRule = (input: string): [string, string] => {
         return [matches[2]+matches[3], matches[1]+'-']
     }
 
-    regex = /^(koma|par|pe|pa|sa|ka|ta|e|a)(.*)/
+    regex = /^(koma|par|pe|pa|sa|s-a|ka|k-a|ta|e|a)(.*)/
     matches = input.match(regex)
     if (matches) {
         return [matches[2], matches[1]+'-']
