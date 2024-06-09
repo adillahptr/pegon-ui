@@ -22,6 +22,7 @@ export const hasInvalidAffixPair = (input: string): boolean => {
 export const satisfyRulePrecedenceAdjustment = (input: string): boolean => {
     const rules = [
             /^b\^e(.*)lah$/,
+            /^b\^e(.*)-an$/,
             /^b\^e(.*)an$/,
             /^m\^e(.*)i$/,
             /^di(.*)i$/,
@@ -59,7 +60,7 @@ const deletePosessivePronouns = (input: string): [string, string[]] => {
 
 const deleteDerivationalSuffix = (input: string): [string, string[]] => {
     //Hapus suffiks -i, -kan, -an
-    var regex = /(.*)(i|kan|(?<!k)an)$/
+    var regex = /(.*)(-an|i|kan|(?<![-k])an)$/
     const matches = input.match(regex)
     if (matches) {
         return [matches[1], ['-'+matches[2]] ]

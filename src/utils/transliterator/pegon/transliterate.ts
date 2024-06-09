@@ -175,8 +175,11 @@ const singleVowelRules: PlainRule[] =
         monographVowelHarakatAtFirstAbjadRules)
 
 const singleEndingVowelRules: PlainRule[] = [
+    ["`a", Pegon.Hamza + Pegon.Sukun],
+    ["`i", Pegon.YaWithHamzaAbove + Pegon.Sukun],
+    ["`u", Pegon.WawHamzaAbove + Pegon.Sukun],
     ["-i", Pegon.Ya],
-    ["i", Pegon.Kasra + Pegon.Ya]
+    ["i", Pegon.Kasra + Pegon.Ya],
 ]
 
 const singleVowelAsWordEndingRules: RegexRule[] =
@@ -419,6 +422,21 @@ const vowelsHarakatRules: PlainRule[] = [
     ["o", Pegon.Fatha + Pegon.Waw],
     ["u-W", Pegon.Damma],
 ]
+
+const vowelHamzaEndingRules: PlainRule[] = [
+    ["a`a", Pegon.Fatha + Pegon.Alif + Pegon.Hamza + Pegon.Sukun],
+    ["-a`a", Pegon.Alif + Pegon.Hamza + Pegon.Sukun],
+    ["a-A`a", Pegon.Fatha + Pegon.Hamza + Pegon.Sukun],
+    ["i`i", Pegon.Kasra + Pegon.Ya + Pegon.YaWithHamzaAbove + Pegon.Sukun],
+    ["-i`i", Pegon.Ya + Pegon.YaWithHamzaAbove + Pegon.Sukun],
+    ["i-Y`i", Pegon.Kasra + Pegon.YaWithHamzaAbove + Pegon.Sukun],
+    ["u`u", Pegon.Damma + Pegon.Waw + Pegon.WawHamzaAbove + Pegon.Sukun],
+    ["-u`u", Pegon.Waw + Pegon.WawHamzaAbove + Pegon.Sukun],
+    ["u-W`u", Pegon.Damma + Pegon.WawHamzaAbove + Pegon.Sukun],
+]
+
+const vowelHamzaAsWordEndingRules: RegexRule[] =
+    asWordEnding(vowelHamzaEndingRules);
 
 const doubleMonographVowelRulesSunda: PlainRule[] = [
     ...doubleMonographVowelRulesStandard,
@@ -720,7 +738,7 @@ const fathaHarakatForWawAndYa: PlainRule[] = [
     ["a-Ay", Pegon.Fatha + Pegon.Ya],
 ]
 
-const fathaHarakatForWawAndYaRules: PlainRule[] = [
+const fathaHarakatForWawAndYaRules: PlainRule[] =
     ruleProduct(consonantRules, 
         chainRule(
             ruleProduct(fathaHarakatForWawAndYa, vowelsHarakatRules),
@@ -728,7 +746,18 @@ const fathaHarakatForWawAndYaRules: PlainRule[] = [
             ruleProduct(fathaHarakatForWawAndYa, monographVowelRules),
         )
     )
+
+const vowelAForOneSyllable: PlainRule[] = [
+    ["a", ""]
 ]
+
+const oneSyllableWithSoundARules: PlainRule[] =
+    ruleProduct(
+        ruleProduct(consonantRules, vowelAForOneSyllable), consonantRules)
+
+const oneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] = 
+    asSingleWord(oneSyllableWithSoundARules)
+
 
 const indonesianPrefixesRules: PlainRule[] = [
     ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
@@ -773,28 +802,35 @@ const indonesianSuffixes: PlainRule[] = [
     ["pun", Pegon.Peh + Pegon.Waw + Pegon.Nun],
     ["kan", Pegon.Kaf + Pegon.Fatha + Pegon.Nun],
 ]
+
 const suffixAnForBaseWordWithEndingA: PlainRule[] = [
-    
-    ["an", Pegon.AlifWithHamzaAbove + Pegon.Nun],
+    ["-an", Pegon.AlifWithHamzaAbove + Pegon.Nun],
+    ["an", Pegon.AlifWithHamzaAbove + Pegon.Fatha + Pegon.Nun],
 ]
 
-const suffixAn: PlainRule[] = [
-    ["an", Pegon.Alif + Pegon.Nun],
+const suffixAnForOpenSyllable: PlainRule[] = [
+    ["-an", Pegon.Alif + Pegon.Nun],
+    ["an", Pegon.Alif + Pegon.Fatha + Pegon.Nun],
 ]
 
-const indonesianSuffixesForBaseWordWithEndingA: PlainRule[] =
-    chainRule(indonesianSuffixes, 
-        suffixAnForBaseWordWithEndingA)
+const suffixAnForClosedSyllable: PlainRule[] = [
+    ["-an", Pegon.Alif + Pegon.Nun],
+    ["an", Pegon.Fatha + Pegon.Alif + Pegon.Nun],
+]
 
-const indonesianSuffixesForRegularBaseWord: PlainRule[] =
-    chainRule(indonesianSuffixes, 
-        suffixAn)
+const transliterateIndonesianSuffixes = (suffix: string, baseWord: string) => {
+    if (suffix.match(/^(-an|an)/)) {
+        if (baseWord[baseWord.length-1].match(/[iueo]/)) {
+            return transliterate(suffix, prepareRules(suffixAnForOpenSyllable))
+        } else if (baseWord[baseWord.length-1].match(/a/)) {
+            return transliterate(suffix, prepareRules(suffixAnForBaseWordWithEndingA))
+        } else{
+            return transliterate(suffix, prepareRules(suffixAnForClosedSyllable))
+        }
+    } 
 
-const transliterateIndonesianSuffixes =
-    (suffix: string, baseWord: string) => 
-        baseWord[baseWord.length-1] === 'a' ?
-        transliterate(suffix, prepareRules(indonesianSuffixesForBaseWordWithEndingA)) :
-        transliterate(suffix, prepareRules(indonesianSuffixesForRegularBaseWord));
+    return transliterate(suffix, prepareRules(indonesianSuffixes))
+}
 
 const transliterateISuffix = (baseWord: string) => {
         if (baseWord[baseWord.length-1] === 'a')
@@ -942,6 +978,16 @@ const transliterateJawaSuffixesVowel = (suffix: string, baseWord: string): strin
 }
 
 const transliterateJawaSuffixes = (suffix: string, baseWord: string): string => {
+    if (suffix.match(/^(-an|an)/)) {
+        if (baseWord[baseWord.length-1].match(/[iueo]/)) {
+            return transliterate(suffix, prepareRules(suffixAnForOpenSyllable))
+        } else if (baseWord[baseWord.length-1].match(/a/)) {
+            return transliterate(suffix, prepareRules(suffixAnForBaseWordWithEndingA))
+        } else{
+            return transliterate(suffix, prepareRules(suffixAnForClosedSyllable))
+        }
+    } 
+
     if (baseWord[baseWord.length-1].match(/^[aiueoWAY]/) && suffix[0].match(/^[-aiueo]/)) {
         return transliterateJawaSuffixesVowel(suffix, baseWord)
     }
@@ -994,6 +1040,16 @@ const transliterateMaduraSuffixesVowel = (suffix: string, baseWord: string): str
 }
 
 const transliterateMaduraSuffixes = (suffix: string, baseWord: string): string => {
+    if (suffix.match(/^(-an|an)/)) {
+        if (baseWord[baseWord.length-1].match(/[iueo]/)) {
+            return transliterate(suffix, prepareRules(suffixAnForOpenSyllable))
+        } else if (baseWord[baseWord.length-1].match(/a/)) {
+            return transliterate(suffix, prepareRules(suffixAnForBaseWordWithEndingA))
+        } else{
+            return transliterate(suffix, prepareRules(suffixAnForClosedSyllable))
+        }
+    } 
+
     if (baseWord[baseWord.length-1].match(/^[aiueoWAY]/) && suffix[0].match(/^[aiueo]/)) {
         return transliterateMaduraSuffixesVowel(suffix, baseWord)
     }
@@ -1059,6 +1115,16 @@ const sundaSuffixesRules: PlainRule[] = [
 ]
 
 const transliterateSundaSuffixes = (suffix: string, baseWord: string): string => {
+    if (suffix.match(/^(-an|an)/)) {
+        if (baseWord[baseWord.length-1].match(/[iueo]/)) {
+            return transliterate(suffix, prepareRules(suffixAnForOpenSyllable))
+        } else if (baseWord[baseWord.length-1].match(/a/)) {
+            return transliterate(suffix, prepareRules(suffixAnForBaseWordWithEndingA))
+        } else{
+            return transliterate(suffix, prepareRules(suffixAnForClosedSyllable))
+        }
+    } 
+
     if (baseWord.match(/(a|i|u|e_u|e|o)$/) && suffix.match(/^(a|i|u|e_u|o|e)(.*)/)) {
         return transliterateSundaSuffixesVowel(suffix, baseWord)
     }
@@ -1093,7 +1159,6 @@ const transliterateJawaAffixes = (affixes: string[], baseWord: string): string[]
     let prefixResult = ''
     let suffixResult = ''
 
-    console.log(affixes, baseWord)
     for (let affix of affixes){
         let prefixMatches = affix.match(/(.*)-$/)
         let suffixMatches = affix.match(/^-(.*)/)
@@ -1182,11 +1247,15 @@ const latinToPegonScheme: Rule[] =
     prepareRules(chainRule(
         specialPrepositionAsSingleWordsRule,
 
+        oneSyllableWithSoundAAsSingleSyllableRules,
+
         closedSyllableWithSoundARules,
 
         beginningSingleVowelAsWordBeginningRules,
 
+        vowelHamzaAsWordEndingRules,
         singleVowelSyllableAsWordEndingRules,
+
         doubleVowelSyllableRules,
 
         firstSyllableWithSoundARules,
@@ -1234,6 +1303,9 @@ export const transliterateLatinToPegonStemResult = (stemResult: StemResult, lang
         return prefix + base + suffix;
     }
 }
+
+const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
+    asSingleWord(asInverse(oneSyllableWithSoundARules))
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
@@ -1410,12 +1482,17 @@ const inverseFathaHarakatForWawAndYaRules: PlainRule[] =
         )
     )
 
+const inverseVowelHamzaAsWordEndingRules: RegexRule[] =
+    asWordEnding(asInverse(vowelHamzaEndingRules))
+
 const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
         inverseBeginningVowelAsWordBeginningRules,
         inverseShaddaRules,
         inverseFirstSyllableWithSoundARules,
         inverseSpecialPrepositionAsSingleWordsRules,
+        inverseVowelHamzaAsWordEndingRules,
+        inverseOneSyllableWithSoundAAsSingleSyllableRules,
         inverseClosedSyllableWithSoundARules,
         inversePrefixWithBeginningVowelsAsWordBeginningRules,
         inversePrefixWithSpaceAsWordBeginningRules,
@@ -1505,14 +1582,35 @@ const changeFaToP: PlainRule[] = [
     ["f", "p"]
 ];
 
+const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
+    ["a`a", "ak"],
+    ["-a`a", "ak"],
+    ["a-A`a", "ak"],
+    ["i`i", "ik"],
+    ["-i`i", "ik"],
+    ["i-Y`i", "ik"],
+    ["u`u", "uk"],
+    ["-u`u", "uk"],
+    ["u-W`u", "uk"],
+]
+
+const vowelHamzaStandardLatinAsWordEndingRules: RegexRule[] =
+    asWordEnding(vowelHamzaStandardLatinEndingRules)
+
+const reversibleToStandardLatinScheme: Rule[] =
+    prepareRules(chainRule(
+        vowelHamzaStandardLatinAsWordEndingRules,
+        standardLatinRules
+    ))
+
 export const transliterateReversibleLatinToStandardLatin =
     (reversibleString: string, lang:string): string => {
         if (lang === 'Jawa' || lang === 'Sunda') {
             return transliterate(
-                transliterate(reversibleString, prepareRules(standardLatinRules)),
+                transliterate(reversibleString, reversibleToStandardLatinScheme),
                 prepareRules(changeFaToP))
         } else
-            return transliterate(reversibleString, prepareRules(standardLatinRules))
+            return transliterate(reversibleString, reversibleToStandardLatinScheme)
 }
 
 /*
