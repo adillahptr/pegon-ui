@@ -576,6 +576,7 @@ const digraphConsonantRules: PlainRule[] = [
     // special combination using diacritics, may drop
     // ["t_h", Pegon.ThaWithOneDotBelow],
     // the one in id.wikipedia/wiki/Abjad_Pegon
+    ["t-", Pegon.TaMarbuta],
     ["t_h", Pegon.ThaWithThreeDotsBelow],
     ["T_h", Pegon.ThaWithOneDotBelow],
     ["t_H", Pegon.ThaWithTwoDotsBelow],
@@ -725,7 +726,7 @@ const closedSyllable = (rules: PlainRule[]): RegexRule[] =>
 const consonantForClosedSyllableWithSoundA: PlainRule[] =
     consonantRules.filter(([k,v]) => k !== "w" && k !== "y")
 
-const closedSyllableWithSoundA: RegexRule[] =
+const closedSyllableWithSoundA: PlainRule[] =
     ruleProduct(
         ruleProduct(consonantRules,aForClosedSyllable).filter(([k,v]) => k !== "w-a" && k !== "y-a"), 
         consonantForClosedSyllableWithSoundA)
@@ -1244,7 +1245,7 @@ const numbers : PlainRule[] = [
 ]
 
 const latinToPegonScheme: Rule[] =
-    prepareRules(chainRule(
+    prepareRules(chainRule<Rule>(
         specialPrepositionAsSingleWordsRule,
 
         oneSyllableWithSoundAAsSingleSyllableRules,
@@ -1269,7 +1270,8 @@ const latinToPegonScheme: Rule[] =
         punctuationRules,
         sukunRules,
         pepetRules,
-        numbers))
+        numbers
+    ))
 
 export const transliterateLatinToPegon = (latinString: string): string => {
     return transliterate(latinString, latinToPegonScheme)
@@ -1598,7 +1600,7 @@ const vowelHamzaStandardLatinAsWordEndingRules: RegexRule[] =
     asWordEnding(vowelHamzaStandardLatinEndingRules)
 
 const reversibleToStandardLatinScheme: Rule[] =
-    prepareRules(chainRule(
+    prepareRules(chainRule<Rule>(
         vowelHamzaStandardLatinAsWordEndingRules,
         standardLatinRules
     ))
