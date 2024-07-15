@@ -123,7 +123,6 @@ export const plainSuffixRule = (input: string): [string, string] => {
 
     regex = /(.*)(ke_un|(?<!k)e_un|-an|(?<!-)an|na)$/
     matches = input.match(regex)
-    console.log(matches)
     if (matches) {
         return [matches[1], '-'+matches[2]]
     }
