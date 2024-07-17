@@ -6641,6 +6641,7 @@ export const kataDasarJawa: string[] = [
     'gocel',
     'goci',
     'goco',
+    'gonca',
     'gotong',
     'gothot',
     'gotra',

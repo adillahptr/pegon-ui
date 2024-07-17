@@ -263,6 +263,10 @@ const doubleDigraphVowelRules: PlainRule[] = [
 const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["aO", Pegon.Fatha + Pegon.Alif +
         Pegon.Alif + Pegon.Fatha + Pegon.Waw],
+    ["aE", Pegon.Fatha + Pegon.Alif +
+        Pegon.Alif + Pegon.Fatha + Pegon.Ya],
+    ["a-AE", Pegon.Fatha +
+        Pegon.Alif + Pegon.Fatha + Pegon.Ya],
     ["aa-A", 
         Pegon.Fatha + Pegon.Alif + 
         Pegon.Alif + Pegon.Fatha],
@@ -416,6 +420,28 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
 ]
 
+const doubleMonographVowelRulesSunda: PlainRule[] = [
+    ...doubleMonographVowelRulesStandard,
+    ["e_u", Pegon.MaddaAbove +
+        Pegon.Waw],
+    ["a_i", Pegon.MaddaAbove +
+        Pegon.Ya +
+        Pegon.Sukun],
+    ["a_u", Pegon.MaddaAbove +
+        Pegon.Waw +
+        Pegon.Sukun],
+]
+
+var doubleMonographVowelRules: PlainRule[] = doubleMonographVowelRulesSunda;
+
+const initiateDoubleMonographVowelRules = (lang: string) => {
+    if(lang === "Sunda"){
+        doubleMonographVowelRules = doubleMonographVowelRulesSunda;
+    } else {
+        doubleMonographVowelRules = doubleMonographVowelRulesStandard;
+    }
+}
+
 const vowelsHarakatRules: PlainRule[] = [
     ["a-A", Pegon.Fatha],
     ["e", Pegon.Fatha + Pegon.Ya],
@@ -438,29 +464,6 @@ const vowelHamzaEndingRules: PlainRule[] = [
 
 const vowelHamzaAsWordEndingRules: RegexRule[] =
     asWordEnding(vowelHamzaEndingRules);
-
-const doubleMonographVowelRulesSunda: PlainRule[] = [
-    ...doubleMonographVowelRulesStandard,
-    // Pegon Sunda
-    ["e_u", Pegon.MaddaAbove +
-        Pegon.Waw],
-    ["a_i", Pegon.Fatha +
-        Pegon.Ya +
-        Pegon.Sukun],
-    ["a_u", Pegon.Fatha +
-        Pegon.Waw +
-        Pegon.Sukun],
-]
-// TODO
-var doubleMonographVowelRules: PlainRule[] = doubleMonographVowelRulesStandard;
-
-const initiateDoubleMonographVowelRules = (lang: string) => {
-    if(lang === "Sunda"){
-        doubleMonographVowelRules = doubleMonographVowelRulesSunda;
-    } else {
-        doubleMonographVowelRules = doubleMonographVowelRulesStandard;
-    }
-}
 
 const doubleMonographBeginningSyllableVowelRules: PlainRule[] = [
     ["iu",Pegon.Ya +
@@ -1275,7 +1278,8 @@ const latinToPegonScheme: Rule[] =
         numbers
     ))
 
-export const transliterateLatinToPegon = (latinString: string): string => {
+export const transliterateLatinToPegon = (latinString: string, lang: string = "Indonesia"): string => {
+    initiateDoubleMonographVowelRules(lang);
     return transliterate(latinString, latinToPegonScheme)
 }
 
@@ -1564,6 +1568,7 @@ const standardLatinRules: PlainRule[] = [
     ["I", "i"],
     ["Y", "i"],
     ["O", "o"],
+    ["E", "e"],
     ["A", "a"],
     ["U", "u"],
     ["G", "g"],

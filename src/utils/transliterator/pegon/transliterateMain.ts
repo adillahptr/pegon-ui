@@ -56,7 +56,7 @@ const stemLatinToPegon = (text: string, lang: string): string => {
       if (stemResult.affixSequence.length != 0) 
         result[index] = transliterateLatinToPegonStemResult(stemResult, lang);
       else
-        result[index] = transliterateLatinToPegon(stemResult.baseWord);
+        result[index] = transliterateLatinToPegon(stemResult.baseWord, lang);
     }
     return result.join(" ");
 }
