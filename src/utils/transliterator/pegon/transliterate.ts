@@ -263,6 +263,10 @@ const doubleDigraphVowelRules: PlainRule[] = [
 const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["aO", Pegon.Fatha + Pegon.Alif +
         Pegon.Alif + Pegon.Fatha + Pegon.Waw],
+    ["u-Wa", Pegon.Damma +
+        Pegon.Waw + Pegon.Fatha + Pegon.Alif],
+    ["u-W-a", Pegon.Damma +
+        Pegon.Waw + Pegon.Alif],
     ["aE", Pegon.Fatha + Pegon.Alif +
         Pegon.Alif + Pegon.Fatha + Pegon.Ya],
     ["a-AE", Pegon.Fatha +
@@ -282,6 +286,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["-a-a", 
         Pegon.Alif + 
         Pegon.AlifWithHamzaAbove],
+    ["a-Ai", Pegon.Fatha +
+        Pegon.Ha + Pegon.Kasra + Pegon.Ya],
+    ["a-A-i", Pegon.Fatha +
+        Pegon.Ha + Pegon.Ya],
     ["ai", Pegon.Fatha + Pegon.Alif +
         Pegon.Ha + Pegon.Kasra + Pegon.Ya],
     ["a-i", Pegon.Fatha + Pegon.Alif +
@@ -294,6 +302,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Ya],
     ["a`i", Pegon.Fatha + Pegon.Alif +
         Pegon.YaWithHamzaAbove + Pegon.Kasra + Pegon.Ya],
+    ["a-Au", Pegon.Fatha +
+        Pegon.Ha + Pegon.Damma + Pegon.Waw],
+    ["a-A-u", Pegon.Fatha +
+        Pegon.Ha + Pegon.Waw],
     ["au", Pegon.Fatha + Pegon.Alif +
         Pegon.Ha + Pegon.Damma + Pegon.Waw],
     ["a-u", Pegon.Fatha + Pegon.Alif +
@@ -308,7 +320,9 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.Hamza + Pegon.Waw],
     ["-a-U", Pegon.Alif +
         Pegon.Alif + Pegon.Waw],
-    ["ae", Pegon.Fatha +
+    ["a-Ae", Pegon.Fatha +
+        Pegon.Ha + Pegon.Fatha + Pegon.Ya],
+    ["ae", Pegon.Fatha + Pegon.Alif +
         Pegon.Ha + Pegon.Fatha + Pegon.Ya],
     ["-a`e", Pegon.Alif +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Ya],
@@ -316,12 +330,36 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.Ha + Pegon.Fatha + Pegon.Ya],
     ["a`e", Pegon.Fatha + Pegon.Alif +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Ya],
+    ["a-Ao", Pegon.Fatha +
+        Pegon.Ha + Pegon.Fatha + Pegon.Waw],
+    ["a-AO", Pegon.Fatha +
+        Pegon.Alif + Pegon.Fatha + Pegon.Waw],
     ["ao", Pegon.Fatha + Pegon.Alif +
         Pegon.Ha + Pegon.Fatha + Pegon.Waw],
     ["-ao", Pegon.Alif +
         Pegon.Ha + Pegon.Fatha + Pegon.Waw],
     ["-aO", Pegon.Alif +
         Pegon.Alif + Pegon.Fatha + Pegon.Waw],
+    ["e-a", Pegon.Fatha + Pegon.Ya +
+        Pegon.Ya + Pegon.Alif],
+    ["e.-a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Alif],
+    ["ea", Pegon.Fatha + Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
+    ["e.a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
+    ["e-`a", Pegon.Fatha + Pegon.Ya +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["e.-`a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["e`a", Pegon.Fatha + Pegon.Ya +
+        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
+    ["e.`a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
+    ["i-Ya", Pegon.Kasra +
+        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
+    ["i-Ya", Pegon.Kasra +
+        Pegon.Ya + Pegon.Alif],
     ["ia", Pegon.Kasra + Pegon.Ya +
         Pegon.Ya + Pegon.Fatha + Pegon.Alif],
     ["i.a", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
@@ -340,6 +378,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["-i`a", Pegon.Ya +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
+    ["i-Yu", Pegon.Kasra +
+        Pegon.Ya + Pegon.Damma + Pegon.Waw],
+    ["i-Yu", Pegon.Kasra +
+        Pegon.Ya + Pegon.Waw],
     ["iu", Pegon.Kasra + Pegon.Ya +
         Pegon.Ya + Pegon.Damma + Pegon.Waw],
     ["i.u", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
@@ -354,6 +396,8 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Waw],
     ["-i`u", Pegon.Ya +
         Pegon.YaWithHamzaAbove + Pegon.Damma + Pegon.Waw],
+    ["i-Yo", Pegon.Kasra +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
     ["i.o", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
         Pegon.Ya + Pegon.Fatha + Pegon.Waw],
     ["io", Pegon.Kasra + Pegon.Ya +
@@ -376,6 +420,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
     ["-u-`a", Pegon.Waw +
         Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["u-Wi", Pegon.Damma +
+        Pegon.Waw + Pegon.Kasra + Pegon.Ya],
+    ["u-Wi", Pegon.Damma +
+        Pegon.Waw + Pegon.Ya],
     ["ui", Pegon.Damma + Pegon.Waw +
         Pegon.Waw + Pegon.Kasra + Pegon.Ya],
     ["u.i", Pegon.Damma + Pegon.Waw + Pegon.Sukun +
@@ -388,28 +436,14 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Kasra + Pegon.Ya],
     ["-u-`i", Pegon.Waw +
         Pegon.YaWithHamzaAbove + Pegon.Ya],
+    ["u-Wo", Pegon.Damma +
+        Pegon.Waw + Pegon.Fatha + Pegon.Waw],
     ["-uo", Pegon.Waw +
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
     ["uo", Pegon.Damma + Pegon.Waw +
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
     ["u.o", Pegon.Damma + Pegon.Waw + Pegon.Sukun +
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
-    ["e-a", Pegon.Fatha + Pegon.Ya +
-        Pegon.Ya + Pegon.Alif],
-    ["e.-a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
-        Pegon.Ya + Pegon.Alif],
-    ["ea", Pegon.Fatha + Pegon.Ya +
-        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
-    ["e.a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
-        Pegon.Ya + Pegon.Fatha + Pegon.Alif],
-    ["e-`a", Pegon.Fatha + Pegon.Ya +
-        Pegon.YaWithHamzaAbove + Pegon.Alif],
-    ["e.-`a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
-        Pegon.YaWithHamzaAbove + Pegon.Alif],
-    ["e`a", Pegon.Fatha + Pegon.Ya +
-        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
-    ["e.`a", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
-        Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
     ["eo", Pegon.Fatha + Pegon.Ya +
         Pegon.Ya + Pegon.Fatha + Pegon.Waw],
     ["e.o", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
@@ -726,7 +760,7 @@ const aForClosedSyllable: PlainRule[] = [
 
 const closedSyllable = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})(?!([_aiueo^\`WAIUEOY]|-a|-u|-i))`), `${val}`])
+        [new RegExp(`(${key})(?!([_aiueo\`WAIUEOY]|^e|-a|-u|-i))`), `${val}`])
 
 const consonantForClosedSyllableWithSoundA: PlainRule[] =
     consonantRules.filter(([k,v]) => k !== "w" && k !== "y")
@@ -860,8 +894,8 @@ const baseWordLastLetterVowel: PlainRule[] = [
 
 const suffixFirstLetterVowel: PlainRule[] = [
     ["e_u", Pegon.Alif + Pegon.MaddaAbove + Pegon.Waw],
-    ["a_i", Pegon.Alif + Pegon.Fatha + Pegon.Ya + Pegon.Sukun],
-    ["a_u", Pegon.Alif + Pegon.Fatha + Pegon.Waw + Pegon.Sukun],
+    ["a_i", Pegon.Alif + Pegon.MaddaAbove + Pegon.Ya + Pegon.Sukun],
+    ["a_u", Pegon.Alif + Pegon.MaddaAbove + Pegon.Waw + Pegon.Sukun],
     ["a", Pegon.Alif],
     ["i", Pegon.Ya],
     ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
@@ -1587,10 +1621,6 @@ const standardLatinRules: PlainRule[] = [
     ["g_8", "g"],
 ];
 
-const changeFaToP: PlainRule[] = [
-    ["f", "p"]
-];
-
 const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
     ["a`a", "ak"],
     ["-a`a", "ak"],
@@ -1603,6 +1633,16 @@ const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
     ["u-W`u", "uk"],
 ]
 
+const changeFaToP: PlainRule[] = [
+    ["f", "p"]
+];
+
+const convertToDoubleVowels: PlainRule[] = [
+    ["uwa", "ua"],
+    ["iya", "ia"],
+    ["eya", "ea"],
+];
+
 const vowelHamzaStandardLatinAsWordEndingRules: RegexRule[] =
     asWordEnding(vowelHamzaStandardLatinEndingRules)
 
@@ -1610,16 +1650,23 @@ const reversibleToStandardLatinScheme: Rule[] =
     prepareRules(chainRule<Rule>(
         vowelHamzaStandardLatinAsWordEndingRules,
         standardLatinRules
-    ))
+))
+
+const reversibleToStandardLatinSecondScheme: Rule[] =
+    prepareRules(chainRule<Rule>(
+        convertToDoubleVowels
+))
 
 export const transliterateReversibleLatinToStandardLatin =
     (reversibleString: string, lang:string): string => {
         if (lang === 'Jawa' || lang === 'Sunda') {
-            return transliterate(
+            var firstResult = transliterate(
                 transliterate(reversibleString, reversibleToStandardLatinScheme),
                 prepareRules(changeFaToP))
         } else
-            return transliterate(reversibleString, reversibleToStandardLatinScheme)
+            var firstResult = transliterate(reversibleString, reversibleToStandardLatinScheme)
+
+        return transliterate(firstResult, convertToDoubleVowels)
 }
 
 /*
