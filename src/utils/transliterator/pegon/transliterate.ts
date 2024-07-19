@@ -210,8 +210,9 @@ const beginningMonographVowelRules: PlainRule[] = [
     ["i", Pegon.Alif + Pegon.Kasra + Pegon.Ya ],
     ["-i-Y", Pegon.Alif + Pegon.Kasra],
     ["-i", Pegon.Alif + Pegon.Ya ],
-    ["-u", Pegon.Alif + Pegon.Waw],
     ["u", Pegon.Alif + Pegon.Damma + Pegon.Waw],
+    ["-u-W", Pegon.Alif + Pegon.Damma],
+    ["-u", Pegon.Alif + Pegon.Waw],
     ["-a", Pegon.Alif],
 ]
 
@@ -1257,7 +1258,7 @@ const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[
 
 const firstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))`), `${val}$2$5`])
+        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?`), `${val}$2$5$8$11`])
 
 
 const firstSyllableWithSoundARules: RegexRule[] =
@@ -1285,6 +1286,8 @@ const numbers : PlainRule[] = [
 
 const latinToPegonScheme: Rule[] =
     prepareRules(chainRule<Rule>(
+        firstSyllableWithSoundARules,
+
         specialPrepositionAsSingleWordsRule,
 
         oneSyllableWithSoundAAsSingleSyllableRules,
@@ -1298,7 +1301,6 @@ const latinToPegonScheme: Rule[] =
 
         doubleVowelSyllableRules,
 
-        firstSyllableWithSoundARules,
 
         singleVowelSyllableRules,
 
@@ -1313,7 +1315,6 @@ const latinToPegonScheme: Rule[] =
     ))
 
 export const transliterateLatinToPegon = (latinString: string, lang: string = "Indonesia"): string => {
-    initiateDoubleMonographVowelRules(lang);
     return transliterate(latinString, latinToPegonScheme)
 }
 
@@ -1351,7 +1352,7 @@ const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))`), `${val}$2$4`])
+        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](ْ|ۡ)?)?([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](ْ|ۡ)?)?`), `${val}$2$4$6$8`])
 
 const inverseFirstSyllableWithSoundARules: RegexRule[] =
     inverseFirstSyllableWithSoundA(asInverse(ruleProduct(consonantRules, aForClosedSyllable)))
@@ -1592,6 +1593,7 @@ const standardLatinRules: PlainRule[] = [
     ["a-A", "a"],
     ["-aA", "a"],
     ["aA", "a"],
+    ["`^e", "ě"],
     ["^e", "ě"],
     ["^i", "i"],
     ["`a", "a"],
@@ -1650,11 +1652,6 @@ const reversibleToStandardLatinScheme: Rule[] =
     prepareRules(chainRule<Rule>(
         vowelHamzaStandardLatinAsWordEndingRules,
         standardLatinRules
-))
-
-const reversibleToStandardLatinSecondScheme: Rule[] =
-    prepareRules(chainRule<Rule>(
-        convertToDoubleVowels
 ))
 
 export const transliterateReversibleLatinToStandardLatin =
