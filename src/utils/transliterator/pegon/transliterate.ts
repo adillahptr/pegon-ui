@@ -165,6 +165,14 @@ const monographVowelHarakatAtFirstAbjadRules: PlainRule[] = [
     ["i", Pegon.Alif + Pegon.Kasra],
     ["u", Pegon.Alif + Pegon.Damma],    
 ]
+
+const vowelsHarakatRules: PlainRule[] = [
+    ["e", Pegon.Fatha + Pegon.Ya],
+    ["i-Y", Pegon.Kasra ],
+    ["o", Pegon.Fatha + Pegon.Waw],
+    ["a-A", Pegon.Fatha],
+    ["u-W", Pegon.Damma],
+]
     
 const singleVowelRules: PlainRule[] =
     chainRule(
@@ -212,16 +220,30 @@ const beginningMonographVowelRules: PlainRule[] = [
     ["-a", Pegon.Alif],
 ]
 
-const beginningIForSoundIngRules: PlainRule[] = [
+const beginningIngForDeadConsonantRules: PlainRule[] = [
     ["in_g", Pegon.Alif + Pegon.Kasra + Pegon.Nga],
     ["-in_g", Pegon.Alif + Pegon.Nga],
     ["`in_g", Pegon.AlifWithHamzaBelow + Pegon.Kasra + Pegon.Nga],
     ["`i-n_g", Pegon.AlifWithHamzaBelow + Pegon.Nga],
 ]
 
+const beginningIngForOpenConsonant: PlainRule[] = [
+    ["in_g", Pegon.Alif + Pegon.Kasra + Pegon.Ya + Pegon.Nga],
+    ["-i-Yn_g", Pegon.Alif + Pegon.Kasra + Pegon.Nga],
+    ["-in_g", Pegon.Alif + Pegon.Ya + Pegon.Nga],
+]
+
+const beginningIngForOpenConsonantRules: PlainRule[] = 
+    chainRule(
+        ruleProduct(beginningIngForOpenConsonant, digraphVowelRules),
+        ruleProduct(beginningIngForOpenConsonant, monographVowelRules),
+        ruleProduct(beginningIngForOpenConsonant, vowelsHarakatRules),
+    )
+
 const beginningSingleVowelRules: PlainRule[] =
     chainRule(
-        beginningIForSoundIngRules,
+        beginningIngForOpenConsonantRules,
+        beginningIngForDeadConsonantRules,
         beginningDigraphVowelRules,
         beginningMonographVowelRules)
 
@@ -254,7 +276,6 @@ const doubleDigraphVowelRules: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.MaddaAbove],
     ["o^e", Pegon.Fatha + Pegon.Waw +
         Pegon.YaWithHamzaAbove + Pegon.MaddaAbove],
-
 ]
 
 const doubleMonographVowelRulesStandard: PlainRule[] = [
@@ -472,14 +493,6 @@ const initiateDoubleMonographVowelRules = (lang: string) => {
         doubleMonographVowelRules = doubleMonographVowelRulesStandard;
     }
 }
-
-const vowelsHarakatRules: PlainRule[] = [
-    ["e", Pegon.Fatha + Pegon.Ya],
-    ["i-Y", Pegon.Kasra ],
-    ["o", Pegon.Fatha + Pegon.Waw],
-    ["a-A", Pegon.Fatha],
-    ["u-W", Pegon.Damma],
-]
 
 const vowelHamzaEndingRules: PlainRule[] = [
     ["a`a", Pegon.Fatha + Pegon.Alif + Pegon.Hamza + Pegon.Sukun],
@@ -1437,12 +1450,23 @@ const inverseBeginningDigraphVowelRules: PlainRule[] =
 const inverseBeginningMonographVowelRules: PlainRule[] =
     asInverse(beginningMonographVowelRules)
 
-const inverseBeginningIForSoundIngRules: PlainRule[] =
-    asInverse(beginningIForSoundIngRules)
+const inverseBeginningIngForDeadConsonantRules: PlainRule[] =
+    asInverse(beginningIngForDeadConsonantRules)
+
+const inverseBeginningIngForOpenConsonant: PlainRule[] =
+    asInverse(beginningIngForOpenConsonant)
+
+const inverseBeginningIngForOpenConsonantRules: PlainRule[] =
+    chainRule(
+        ruleProduct(inverseBeginningIngForOpenConsonant, inverseDigraphVowelRules),
+        ruleProduct(inverseBeginningIngForOpenConsonant, inverseMonographVowelRules),
+        ruleProduct(inverseBeginningIngForOpenConsonant, inverseVowelsHarakatRules)
+    )
 
 const inverseBeginningVowelAsWordBeginningRules: RegexRule[] =
     asWordBeginning(chainRule(
-        inverseBeginningIForSoundIngRules,
+        inverseBeginningIngForOpenConsonantRules,
+        inverseBeginningIngForDeadConsonantRules,
         inverseBeginningDigraphVowelRules,
         inverseBeginningMonographVowelRules))
 
