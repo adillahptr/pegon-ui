@@ -1,6 +1,6 @@
 export const plainPrefixRule = (input: string): [string, string] => {
     //Hapus plain prefix
-    var regex = /^(su|pri|wi|dak|d-ak|tak|kok|tok|di|d-i|kapi|kami|ka|k-a|k\^e|sa|s-a|pa|pi|pra|tar|kuma|ma|m\^e|a|-a|den)(.*)/
+    var regex = /^(su|pri|wi|dak|d-ak|tak|kok|tok|di|d-i|kapi|kami|ka\+A|ka|k-a|k\^e|sa\+A|sa|s-a|pa|pi|pra|tar|kuma|ma|m\^e|a|-a|den)(.*)/
     const matches = input.match(regex)
     if (matches) {
         return [matches[2], matches[1]+'-']
