@@ -426,6 +426,8 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
     ["-i`o", Pegon.Ya +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
+    ["u-Wwe", Pegon.Damma +
+        Pegon.Waw + Pegon.Fatha + Pegon.Ya],
     ["ua", Pegon.Damma + Pegon.Waw +
         Pegon.Waw + Pegon.Fatha + Pegon.Alif],
     ["u.a", Pegon.Damma + Pegon.Waw + Pegon.Sukun +
