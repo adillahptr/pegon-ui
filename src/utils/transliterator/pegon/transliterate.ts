@@ -470,6 +470,7 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
     ["e.`o", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
+    ["^e^e", Pegon.MaddaAbove + Pegon.Alif + Pegon.MaddaAbove]
 ]
 
 const doubleMonographVowelRulesSunda: PlainRule[] = [
@@ -854,16 +855,22 @@ const indonesianSuffixes: PlainRule[] = [
 ]
 
 const suffixAnForBaseWordWithEndingA: PlainRule[] = [
+    ["-ana", Pegon.AlifWithHamzaAbove + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
+    ["ana", Pegon.AlifWithHamzaAbove + Pegon.Fatha + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
     ["-an", Pegon.AlifWithHamzaAbove + Pegon.Nun],
     ["an", Pegon.AlifWithHamzaAbove + Pegon.Fatha + Pegon.Nun],
 ]
 
 const suffixAnForOpenSyllable: PlainRule[] = [
+    ["-ana", Pegon.Alif + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
+    ["ana", Pegon.Alif + Pegon.Fatha + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
     ["-an", Pegon.Alif + Pegon.Nun],
     ["an", Pegon.Alif + Pegon.Fatha + Pegon.Nun],
 ]
 
 const suffixAnForClosedSyllable: PlainRule[] = [
+    ["-ana", Pegon.Alif + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
+    ["ana", Pegon.Fatha + Pegon.Alif + Pegon.Nun + Pegon.Fatha + Pegon.Alif],
     ["-an", Pegon.Alif + Pegon.Nun],
     ["an", Pegon.Fatha + Pegon.Alif + Pegon.Nun],
 ]
@@ -942,8 +949,8 @@ const jawaPrefixesRules: PlainRule[] = [
     ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
     ["d-i", Pegon.Dal + Pegon.Ya],
     ["su", Pegon.Sin + Pegon.Waw],
-    ["pri", Pegon.Peh + Pegon.Ra + Pegon.Ya],
-    ["wi", Pegon.Waw + Pegon.Ya],
+    ["pri", Pegon.Peh + Pegon.Ra + Pegon.Kasra + Pegon.Ya],
+    ["wi", Pegon.Waw + Pegon.Kasra + Pegon.Ya],
     ["k^e", Pegon.Kaf + Pegon.MaddaAbove],
     ["sa+A", Pegon.Sin + Pegon.Fatha + Pegon.Alif],
     ["sa", Pegon.Sin + Pegon.Fatha],
@@ -958,9 +965,9 @@ const jawaPrefixesRules: PlainRule[] = [
     ["ko", Pegon.Kaf + Pegon.Fatha + Pegon.Waw],
     ["tok", Pegon.Ta + Pegon.Fatha + Pegon.Waw + Pegon.Kaf],
     ["to", Pegon.Ta + Pegon.Fatha + Pegon.Waw],
-    ["pi", Pegon.Peh + Pegon.Ya],
-    ["kami", Pegon.Kaf + Pegon.Fatha + Pegon.Mim + Pegon.Ya],
-    ["kapi", Pegon.Kaf + Pegon.Fatha + Pegon.Peh + Pegon.Ya],
+    ["pi", Pegon.Peh + Pegon.Kasra + Pegon.Ya],
+    ["kami", Pegon.Kaf + Pegon.Fatha + Pegon.Mim + Pegon.Kasra + Pegon.Ya],
+    ["kapi", Pegon.Kaf + Pegon.Fatha + Pegon.Peh + Pegon.Kasra + Pegon.Ya],
     ["kuma", Pegon.Kaf + Pegon.Waw + Pegon.Mim + Pegon.Fatha],
     ["ka+A", Pegon.Kaf + Pegon.Fatha + Pegon.Alif],
     ["ka", Pegon.Kaf + Pegon.Fatha],
@@ -984,6 +991,9 @@ const jawaPrefixesRules: PlainRule[] = [
     ["an", Pegon.Ha + Pegon.Fatha + Pegon.Nun],
     ["a", Pegon.Ha + Pegon.Fatha],
     ["den", Pegon.Dal + Pegon.Fatha + Pegon.Ya + Pegon.Nun + Pegon.Space],
+    ["m", Pegon.Mim],
+    ["n_g", Pegon.Nga],
+    ["n", Pegon.Nun],
 ]
 
 const jawaSuffixesRules: PlainRule[] = [
@@ -1005,7 +1015,7 @@ const jawaPrefixesRulesAlt: PlainRule[] = [
 ]
 
 const transliterateJawaPrefixes = (prefix: string, baseWord: string): string => {
-    if (baseWord.match(/^[aiu\^eo]/) && prefix.match(/^(d-ak|dak|d-i|di)/)) {
+    if (baseWord.match(/^[aiu\^eo]/) && prefix.match(/^(d-ak|dak|d-i|di)$/)) {
         return transliterate(prefix, prepareRules(jawaPrefixesRulesAlt));
     }
 
@@ -1014,7 +1024,7 @@ const transliterateJawaPrefixes = (prefix: string, baseWord: string): string => 
 
 const transliterateJawaSuffixesVowel = (suffix: string, baseWord: string): string => {
     const jawaSuffixesRulesAlt: PlainRule[] = [
-        ["na", Pegon.Nun + Pegon.Alif],
+        ["na", Pegon.Nun + Pegon.Fatha + Pegon.Alif],
         ["ke", Pegon.Kaf + Pegon.Fatha + Pegon.Ya],
         ["n", Pegon.Nun],
     ]
@@ -1068,7 +1078,7 @@ const maduraPrefixesRules: PlainRule[] = [
 
 const maduraSuffixesRules: PlainRule[] = [
     ["en", Pegon.Fatha + Pegon.Ya + Pegon.Nun],
-    ["ag_hi", Pegon.Alif + Pegon.Ghain + Pegon.Ya],
+    ["ag_hi", Pegon.Alif + Pegon.Ghain + Pegon.Kasra + Pegon.Ya],
     ["an", Pegon.Alif + Pegon.Nun],
     ["e", Pegon.Fatha + Pegon.Ya],
     ["a", Pegon.Alif],

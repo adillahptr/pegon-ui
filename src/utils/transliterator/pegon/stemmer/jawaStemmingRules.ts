@@ -160,7 +160,7 @@ export const allomorphRules = [
 
 export const plainSuffixRule = (input: string): [string, string] => {
     // Hapus plain suffix
-    var regex = /(i|en|na|-an|an|ake|-a|a|e|ana)$/
+    var regex = /(i|en|na|ana|-an|an|ake|-a|a|e)$/
     const matches = input.match(regex)
     var res = ""
     if (matches) {
