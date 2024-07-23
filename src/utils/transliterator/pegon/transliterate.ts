@@ -470,7 +470,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
     ["e.`o", Pegon.Fatha + Pegon.Ya + Pegon.Sukun +
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Waw],
-    ["^e^e", Pegon.MaddaAbove + Pegon.Alif + Pegon.MaddaAbove]
+    ["^e`^e", Pegon.MaddaAbove +
+        Pegon.YaWithHamzaAbove + Pegon.MaddaAbove],
+    ["^e^e", Pegon.MaddaAbove + 
+        Pegon.Alif + Pegon.MaddaAbove]
 ]
 
 const doubleMonographVowelRulesSunda: PlainRule[] = [
