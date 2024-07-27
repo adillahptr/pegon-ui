@@ -48,6 +48,8 @@ export const wordDelimiters: string[] = [
   "؛",
   "؛",
   "؟",
+  "﴿",
+  "﴾",
   "\n",
   "\t",
   "\u200C",
