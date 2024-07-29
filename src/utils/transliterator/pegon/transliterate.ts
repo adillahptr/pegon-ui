@@ -56,6 +56,7 @@ const enum Pegon {
     Ya = "\u064A",
     Ta = "\u062A",
     Ca = "\u0686",
+    Ca2 = "\u0758",
     Dyeh = "\u0684",
     Dal = "\u062F",
     Waw = "\u0648",
@@ -103,6 +104,7 @@ const enum Pegon {
     Nga = "\u06A0",
     Nya = "\u06D1",
     Nya2 = "\u067E",
+    Nya3 = "\u0752",
     FathaThenWawThenKasra = "\u064E\u0648\u0650",
     FathaThenYaThenKasra = "\u064E\u064A\u0650",
     TaMarbuta = "\u0629",
@@ -647,6 +649,7 @@ const monographConsonantRules: PlainRule[] = [
     ["b", Pegon.Ba],
     ["t", Pegon.Ta],
     ["c", Pegon.Ca],
+    ["c_2", Pegon.Ca2],
     ["d", Pegon.Dal],
     ["r", Pegon.Ra],
     ["z", Pegon.Zain],
@@ -698,7 +701,8 @@ const digraphConsonantRules: PlainRule[] = [
     ["g_h", Pegon.Ghain],
     ["n_g", Pegon.Nga],
     ["n_y", Pegon.Nya],
-    ["n_y", Pegon.Nya2],
+    ["N_y", Pegon.Nya2],
+    ["N_Y", Pegon.Nya3],
     ["n_Y", Pegon.NunWithThreeDotsAbove],
     ["g_1", Pegon.KafWithOneDotBelow],
     ["g_2", Pegon.KafWithOneDotAbove],
@@ -1336,7 +1340,7 @@ const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[
 
 const firstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
+        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
 
 
 const firstSyllableWithSoundARules: RegexRule[] =
@@ -1444,7 +1448,7 @@ const aForClosedSyllable2: PlainRule[] = [
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
+        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقپڤڤكࢴڮلمنهءئؤݒݘ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴپڮلمنهويءئؤݒݘ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮپلمنهءئݒݘؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدݒݘرپزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴپڬڭݢݣؼبتچدرزݒݘسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
 
 const inverseFirstSyllableWithSoundARules: RegexRule[] =
     inverseFirstSyllableWithSoundA(asInverse(ruleProduct(consonantRules, aForClosedSyllable2)))
@@ -1692,6 +1696,8 @@ const standardLatinRules: PlainRule[] = [
     ["g_h", "g̣"],
     ["n_g", "ṅ"],
     ["n_y", "ñ"],
+    ["N_y", "ñ"],
+    ["N_Y", "ñ"],
     ["n_Y", "ñ"],
     ["e_u", "eu"],
     ["a_i", "ai"],
@@ -1730,6 +1736,7 @@ const standardLatinRules: PlainRule[] = [
     ["-u", "u"],
     ["^.", ""],
     [".", ""],
+    ["c_2", "c"],
     ["g_1", "g"],
     ["g_2", "g"],
     ["g_3", "g"],
