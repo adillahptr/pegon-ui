@@ -621,6 +621,11 @@ const doubleVowelRules: PlainRule[] =
         doubleDigraphVowelRules,
         doubleMonographVowelRules)
 
+const doubleVowelAsWordBeginningRules: RegexRule[] =
+    asWordBeginning(
+        ruleProduct([["", Pegon.Alif]], doubleVowelRules)
+    )
+
 const doubleEndingVowelRules: PlainRule[] = [
     ["ae", Pegon.Alif +
         Pegon.Ha +
@@ -903,15 +908,31 @@ const aForClosedSyllable2: PlainRule[] = [
 ]
 
 const doubleVowelClosedSyllableRules: RegexRule[] = (
-    closedSyllable(
-        ruleProduct(
-            chainRule(
-                ruleProduct(doubleVowelForClosedSyllableLeftSideDigraph, aForClosedSyllable2),
-                ruleProduct(doubleVowelForClosedSyllableLeftSideMonograph, aForClosedSyllable2),
-                ruleProduct(doubleVowelForClosedSyllableLeftSideHarakat, aForClosedSyllable2),
-            ),
-            consonantRules
-        )
+    ruleProduct(
+        chainRule(
+            ruleProduct(doubleVowelForClosedSyllableLeftSideDigraph, aForClosedSyllable2),
+            ruleProduct(doubleVowelForClosedSyllableLeftSideMonograph, aForClosedSyllable2),
+            ruleProduct(doubleVowelForClosedSyllableLeftSideHarakat, aForClosedSyllable2),
+        ),
+        consonantRules
+    )
+)
+
+const closedSyllableAsNotBeginning = (rules: PlainRule[]): RegexRule[] =>
+    prepareRules(rules).map<RegexRule>(([key, val]) =>
+        [new RegExp(`(.)(${key})(?!([_aiueo\`WAIUEOY]|^e|-a|-u|-i))`), `$1${val}`])
+
+const closedSyllableAsWordBeginning = (rules: PlainRule[]): RegexRule[] =>
+    prepareRules(rules).map<RegexRule>(([key, val]) =>
+        [new RegExp(`^(${key})(?!([_aiueo\`WAIUEOY]|^e|-a|-u|-i))`), `${val}`])
+
+const doubleVowelClosedSyllableAsNotBeginningRules: RegexRule[] = (
+    closedSyllableAsNotBeginning(doubleVowelClosedSyllableRules)
+)
+
+const doubleVowelClosedSyllableAsWordBeginningRules: RegexRule[] = (
+    closedSyllableAsWordBeginning(
+        ruleProduct([["", Pegon.Alif]], doubleVowelClosedSyllableRules)
     )
 )
 
@@ -1424,8 +1445,10 @@ const latinToPegonScheme: Rule[] =
         oneSyllableWithSoundAAsSingleSyllableRules,
 
         closedSyllableWithSoundARules,
-        doubleVowelClosedSyllableRules,
+        doubleVowelClosedSyllableAsNotBeginningRules,
 
+        doubleVowelClosedSyllableAsWordBeginningRules,
+        doubleVowelAsWordBeginningRules,
         beginningSingleVowelAsWordBeginningRules,
 
         singleVowelSyllableAsWordEndingRules,
@@ -1501,6 +1524,14 @@ const inverseFirstSyllableWithSoundARules: RegexRule[] =
 const inverseClosedSyllable = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
         [new RegExp(`(${key})(?![اويَُِّࣤ])`), `${val}`])
+
+const inverseClosedSyllableAsNotBeginning = (rules: PlainRule[]): RegexRule[] =>
+    prepareRules(rules).map<RegexRule>(([key, val]) =>
+        [new RegExp(`(.)(${key})(?![اويَُِّࣤ])`), `$1${val}`])
+
+const inverseClosedSyllableAsWordBeginning = (rules: PlainRule[]): RegexRule[] =>
+    prepareRules(rules).map<RegexRule>(([key, val]) =>
+        [new RegExp(`^(${key})(?![اويَُِّࣤ])`), `${val}`])
 
 const inverseClosedSyllableWithSoundARules: RegexRule[] =
     inverseClosedSyllable(asInverse(closedSyllableWithSoundA))
@@ -1699,26 +1730,39 @@ const inverseFathaHarakatForWawAndYaRules: PlainRule[] =
 const inverseVowelHamzaAsWordEndingRules: RegexRule[] =
     asWordEnding(asInverse(vowelHamzaEndingRules))
 
-const inverseDoubleVowelForClosedSyllableRules: RegexRule[] =
-    inverseClosedSyllable(
-        ruleProduct(
-            chainRule(
-                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideHarakat, inverseAForClosedSyllable2),
-                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideMonograph, inverseAForClosedSyllable2),
-                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideDigraph, inverseAForClosedSyllable2),
-            ),
-            inverseOpenConsonantRules
-        )
+const inverseDoubleVowelClosedSyllableRules: PlainRule[] =
+    ruleProduct(
+        chainRule(
+            ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideHarakat, inverseAForClosedSyllable2),
+            ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideMonograph, inverseAForClosedSyllable2),
+            ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideDigraph, inverseAForClosedSyllable2),
+        ),
+        inverseOpenConsonantRules
     )
+
+const inverseDoubleVowelForClosedSyllablAsNotBeginningeRules: RegexRule[] =
+    inverseClosedSyllableAsNotBeginning(inverseDoubleVowelClosedSyllableRules)
+
+const inverseDoubleVowelForClosedSyllablAsWordBeginningeRules: RegexRule[] =
+    inverseClosedSyllableAsWordBeginning(
+        ruleProduct([[Pegon.Alif, ""]], inverseDoubleVowelClosedSyllableRules)
+    )
+
+const inverseDoubleVowelAsWordBeginningRules: PlainRule[] =
+    asWordBeginning(asInverse(
+        ruleProduct([["", Pegon.Alif]], doubleVowelRules)
+    ))
 
 const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
+        inverseDoubleVowelForClosedSyllablAsWordBeginningeRules,
+        inverseDoubleVowelAsWordBeginningRules,
         inverseBeginningVowelAsWordBeginningRules,
         inverseFirstSyllableWithSoundARules,
         inverseSpecialPrepositionAsSingleWordsRules,
         inverseVowelHamzaAsWordEndingRules,
         inverseOneSyllableWithSoundAAsSingleSyllableRules,
-        inverseDoubleVowelForClosedSyllableRules,
+        inverseDoubleVowelForClosedSyllablAsNotBeginningeRules,
         inverseClosedSyllableWithSoundARules,
         inversePrefixWithBeginningVowelsAsWordBeginningRules,
         inversePrefixWithSpaceAsWordBeginningRules,
