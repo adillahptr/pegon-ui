@@ -907,7 +907,7 @@ const aForClosedSyllable2: PlainRule[] = [
     ["a", Pegon.Fatha],
 ]
 
-const doubleVowelClosedSyllableRules: RegexRule[] = (
+const doubleVowelClosedSyllableRules: PlainRule[] = (
     ruleProduct(
         chainRule(
             ruleProduct(doubleVowelForClosedSyllableLeftSideDigraph, aForClosedSyllable2),
@@ -1748,7 +1748,7 @@ const inverseDoubleVowelForClosedSyllablAsWordBeginningeRules: RegexRule[] =
         ruleProduct([[Pegon.Alif, ""]], inverseDoubleVowelClosedSyllableRules)
     )
 
-const inverseDoubleVowelAsWordBeginningRules: PlainRule[] =
+const inverseDoubleVowelAsWordBeginningRules: RegexRule[] =
     asWordBeginning(asInverse(
         ruleProduct([["", Pegon.Alif]], doubleVowelRules)
     ))
