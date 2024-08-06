@@ -391,7 +391,7 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
     ["i-Ya", Pegon.Kasra +
         Pegon.Ya + Pegon.Fatha + Pegon.Alif],
-    ["i-Ya", Pegon.Kasra +
+    ["i-Y-a", Pegon.Kasra +
         Pegon.Ya + Pegon.Alif],
     ["ia", Pegon.Kasra + Pegon.Ya +
         Pegon.Ya + Pegon.Fatha + Pegon.Alif],
@@ -417,7 +417,7 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Fatha + Pegon.Alif],
     ["i-Yu", Pegon.Kasra +
         Pegon.Ya + Pegon.Damma + Pegon.Waw],
-    ["i-Yu", Pegon.Kasra +
+    ["i-Y-u", Pegon.Kasra +
         Pegon.Ya + Pegon.Waw],
     ["iu", Pegon.Kasra + Pegon.Ya +
         Pegon.Ya + Pegon.Damma + Pegon.Waw],
@@ -471,7 +471,7 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["u-Wi", Pegon.Damma +
         Pegon.Waw + Pegon.Kasra + Pegon.Ya],
-    ["u-Wi", Pegon.Damma +
+    ["u-W-i", Pegon.Damma +
         Pegon.Waw + Pegon.Ya],
     ["ui", Pegon.Damma + Pegon.Waw +
         Pegon.Waw + Pegon.Kasra + Pegon.Ya],
@@ -866,6 +866,54 @@ const oneSyllableWithSoundARules: PlainRule[] =
 const oneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] = 
     asSingleWord(oneSyllableWithSoundARules)
 
+const doubleVowelForClosedSyllableLeftSideMonograph: PlainRule[] = [
+    ["i", Pegon.Kasra + Pegon.Ya + Pegon.Ya],
+    ["u", Pegon.Damma + Pegon.Waw + Pegon.Waw],
+    ["e", Pegon.Fatha + Pegon.Ya + Pegon.Ya],
+    ["o", Pegon.Fatha + Pegon.Waw + Pegon.Waw],
+    ["i^.", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 + Pegon.Ya],
+    ["u^.", Pegon.Damma + Pegon.Waw + Pegon.Sukun2 + Pegon.Waw],
+    ["e^.", Pegon.Fatha + Pegon.Ya + Pegon.Sukun2 + Pegon.Ya],
+    ["o^.", Pegon.Fatha + Pegon.Waw + Pegon.Sukun2 + Pegon.Waw],
+    ["i.", Pegon.Kasra + Pegon.Ya + Pegon.Sukun + Pegon.Ya],
+    ["u.", Pegon.Damma + Pegon.Waw + Pegon.Sukun + Pegon.Waw],
+    ["e.", Pegon.Fatha + Pegon.Ya + Pegon.Sukun + Pegon.Ya],
+    ["o.", Pegon.Fatha + Pegon.Waw + Pegon.Sukun + Pegon.Waw],
+]
+
+const doubleVowelForClosedSyllableLeftSideDigraph: PlainRule[] = [
+    ["-i", Pegon.Ya + Pegon.Ya],
+    ["-u", Pegon.Waw + Pegon.Waw],
+    ["^e", Pegon.MaddaAbove + Pegon.Waw],
+    ["-i^.", Pegon.Ya + Pegon.Sukun2 + Pegon.Ya],
+    ["-u^.", Pegon.Waw + Pegon.Sukun2 + Pegon.Waw],
+    ["-i.", Pegon.Ya + Pegon.Sukun + Pegon.Ya],
+    ["-u.", Pegon.Waw + Pegon.Sukun + Pegon.Waw],
+]
+
+const doubleVowelForClosedSyllableLeftSideHarakat: PlainRule[] = [
+    ["i-Y", Pegon.Kasra + Pegon.Ya],
+    ["u-W", Pegon.Damma + Pegon.Waw],
+]
+
+const aForClosedSyllable2: PlainRule[] = [
+    ["-aA", Pegon.Alif],
+    ["aA", Pegon.Fatha + Pegon.Alif],
+    ["a", Pegon.Fatha],
+]
+
+const doubleVowelClosedSyllableRules: RegexRule[] = (
+    closedSyllable(
+        ruleProduct(
+            chainRule(
+                ruleProduct(doubleVowelForClosedSyllableLeftSideDigraph, aForClosedSyllable2),
+                ruleProduct(doubleVowelForClosedSyllableLeftSideMonograph, aForClosedSyllable2),
+                ruleProduct(doubleVowelForClosedSyllableLeftSideHarakat, aForClosedSyllable2),
+            ),
+            consonantRules
+        )
+    )
+)
 
 const indonesianPrefixesRules: PlainRule[] = [
     ["di", Pegon.Dal + Pegon.Kasra + Pegon.Ya],
@@ -1376,6 +1424,7 @@ const latinToPegonScheme: Rule[] =
         oneSyllableWithSoundAAsSingleSyllableRules,
 
         closedSyllableWithSoundARules,
+        doubleVowelClosedSyllableRules,
 
         beginningSingleVowelAsWordBeginningRules,
 
@@ -1428,10 +1477,6 @@ export const transliterateLatinToPegonStemResult = (stemResult: StemResult, lang
         return prefix + base + suffix;
     }
 }
-
-const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
-    asSingleWord(asInverse(oneSyllableWithSoundARules))
-
 const digraphVowelRules2: PlainRule[] = [
     ["^e", Pegon.MaddaAbove],
     ["`a", Pegon.YaWithHamzaAbove + Pegon.Alif],
@@ -1440,11 +1485,11 @@ const digraphVowelRules2: PlainRule[] = [
     ["^i", Pegon.Kasra + Pegon.Maksura]
 ]
 
-const aForClosedSyllable2: PlainRule[] = [
-    ["-aA", Pegon.Alif],
-    ["aA", Pegon.Fatha + Pegon.Alif],
-    ["a", Pegon.Fatha],
-]
+const inverseAForClosedSyllable2: PlainRule[] =
+    asInverse(aForClosedSyllable2)
+
+const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
+    asSingleWord(asInverse(oneSyllableWithSoundARules))
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
@@ -1459,6 +1504,15 @@ const inverseClosedSyllable = (rules: PlainRule[]): RegexRule[] =>
 
 const inverseClosedSyllableWithSoundARules: RegexRule[] =
     inverseClosedSyllable(asInverse(closedSyllableWithSoundA))
+
+const inverseDoubleVowelForClosedSyllableLeftSideDigraph: PlainRule[] =
+    asInverse(doubleVowelForClosedSyllableLeftSideDigraph)
+
+const inverseDoubleVowelForClosedSyllableLeftSideMonograph: PlainRule[] =
+    asInverse(doubleVowelForClosedSyllableLeftSideMonograph)
+
+const inverseDoubleVowelForClosedSyllableLeftSideHarakat: PlainRule[] =
+    asInverse(doubleVowelForClosedSyllableLeftSideHarakat)
 
 const inverseSpecialPrepositionAsSingleWordsRules: RegexRule[] =
     asSingleWord(asInverse(specialPrepositionRules))
@@ -1645,6 +1699,18 @@ const inverseFathaHarakatForWawAndYaRules: PlainRule[] =
 const inverseVowelHamzaAsWordEndingRules: RegexRule[] =
     asWordEnding(asInverse(vowelHamzaEndingRules))
 
+const inverseDoubleVowelForClosedSyllableRules: RegexRule[] =
+    inverseClosedSyllable(
+        ruleProduct(
+            chainRule(
+                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideHarakat, inverseAForClosedSyllable2),
+                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideMonograph, inverseAForClosedSyllable2),
+                ruleProduct(inverseDoubleVowelForClosedSyllableLeftSideDigraph, inverseAForClosedSyllable2),
+            ),
+            inverseOpenConsonantRules
+        )
+    )
+
 const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
         inverseBeginningVowelAsWordBeginningRules,
@@ -1652,6 +1718,7 @@ const initiatePegonToLatinScheme = (): Rule[] => {
         inverseSpecialPrepositionAsSingleWordsRules,
         inverseVowelHamzaAsWordEndingRules,
         inverseOneSyllableWithSoundAAsSingleSyllableRules,
+        inverseDoubleVowelForClosedSyllableRules,
         inverseClosedSyllableWithSoundARules,
         inversePrefixWithBeginningVowelsAsWordBeginningRules,
         inversePrefixWithSpaceAsWordBeginningRules,
