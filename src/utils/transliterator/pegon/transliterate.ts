@@ -152,6 +152,7 @@ const monographVowelRules: PlainRule[] = [
 ]
 
 const digraphVowelRules: PlainRule[] = [
+    ["aA", Pegon.Fatha + Pegon.Alif],
     ["-a", Pegon.Alif],
     ["-i", Pegon.Ya],
     ["-u", Pegon.Waw],
@@ -959,7 +960,7 @@ const closedSyllableAsNotBeginning = (rules: PlainRule[]): RegexRule[] =>
 
 const closedSyllableAsWordBeginning = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`^(${key})(?!([_aiueo\`WAIUEOY]|^e|-a|-u|-i))`), `${val}`])
+        [new RegExp(`(^|[${wordDelimitingPatterns}])(${key})(?!([_aiueo\`WAIUEOY]|^e|-a|-u|-i))`), `$1${val}`])
 
 const doubleVowelClosedSyllableAsNotBeginningRules: RegexRule[] = (
     closedSyllableAsNotBeginning(doubleVowelClosedSyllableRules)
@@ -1444,14 +1445,14 @@ const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[
 
 const firstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]?(_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]?(_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
+        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
 
 
 const firstSyllableWithSoundARules: RegexRule[] =
     firstSyllableWithSoundA(ruleProduct(consonantRules, aForClosedSyllable));
 
 const countSyllable = (word: string): number => {
-    const matches = word.match(/(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
+    const matches = word.match(/(a-A|-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
     if (matches)
         return matches.length
     return 0
@@ -1551,7 +1552,7 @@ const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقپڤڤكࢴڮلمنهءئؤݒݘ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴپڮلمنهويءئؤݒݘ]([اويَُِّࣤ]+))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮپلمنهءئݒݘؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدݒݘرپزسعجفقڤڤكࢴڮلمنهويءئؤ]([اويَُِّࣤ]+))([ثحخڊࢮڎذشصضطظغڠۑڽࢴپڬڭݢݣؼبتچدرزݒݘسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
+        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقپڤڤكࢴڮلمنهءئؤݒݘ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴپڮلمنهويءئؤݒݘ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮپلمنهءئݒݘؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدݒݘرپزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴپڬڭݢݣؼبتچدرزݒݘسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
 
 const inverseFirstSyllableWithSoundARules: RegexRule[] =
     inverseFirstSyllableWithSoundA(asInverse(ruleProduct(consonantRules, aForClosedSyllable2)))
@@ -1566,7 +1567,7 @@ const inverseClosedSyllableAsNotBeginning = (rules: PlainRule[]): RegexRule[] =>
 
 const inverseClosedSyllableAsWordBeginning = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`^(${key})(?![اويَُِّࣤ])`), `${val}`])
+        [new RegExp(`(^|[${wordDelimitingPatterns}])(${key})(?![اويَُِّࣤ])`), `$1${val}`])
 
 const inverseClosedSyllableWithSoundARules: RegexRule[] =
     inverseClosedSyllable(asInverse(closedSyllableWithSoundA))
@@ -1645,8 +1646,8 @@ const inverseBeginningIngForOpenConsonant: PlainRule[] =
 
 const inverseBeginningIngForOpenConsonantRules: PlainRule[] =
     chainRule(
-        ruleProduct(inverseBeginningIngForOpenConsonant, inverseDigraphVowelRules),
         ruleProduct(inverseBeginningIngForOpenConsonant, inverseMonographVowelRules),
+        ruleProduct(inverseBeginningIngForOpenConsonant, inverseDigraphVowelRules),
         ruleProduct(inverseBeginningIngForOpenConsonant, inverseVowelsHarakatRules)
     )
 
@@ -1659,7 +1660,7 @@ const inverseBeginningVowelAsWordBeginningRules: RegexRule[] =
 
 const inverseBeginningOAndERules = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`^(${key})(?![اَُِّࣤ]|ي?![اويَُِّࣤ]|و?![اويَُِّࣤ])`), `${val}`])
+        [new RegExp(`(^|[${wordDelimitingPatterns}])(${key})(?![اَُِّࣤ]|ي?![اويَُِّࣤ]|و?![اويَُِّࣤ])`), `$1${val}`])
 
 const inverseBeginningOAndEAsWordBeginningRules: RegexRule[] =
     inverseBeginningOAndERules(asInverse(BeginningOAndERules))
@@ -1711,8 +1712,8 @@ const inverseDoubleSameConsonantRules: PlainRule[] =
 
 const inverseShaddaRules: PlainRule[] =
     chainRule(
-        ruleProduct(inverseDoubleSameConsonantRules, inverseDigraphVowelRules),
         ruleProduct(inverseDoubleSameConsonantRules, inverseMonographVowelRules),
+        ruleProduct(inverseDoubleSameConsonantRules, inverseDigraphVowelRules),
         ruleProduct(inverseDoubleSameConsonantRules, inverseVowelsHarakatRules),
         inverseDoubleSameConsonantRules)
 
@@ -1726,8 +1727,8 @@ const inverseSingleVowelSyllableRules: Rule[] =
     chainRule<Rule>(
         asWordEnding(ruleProduct(inverseOpenConsonantRules,
                                  inverseSingleEndingVowelRules)),
-        ruleProduct(inverseOpenConsonantRules, inverseDigraphVowelRules),
         ruleProduct(inverseOpenConsonantRules, inverseMonographVowelRules),
+        ruleProduct(inverseOpenConsonantRules, inverseDigraphVowelRules),
         ruleProduct(inverseOpenConsonantRules, inverseVowelsHarakatRules))
 
 const inverseDoubleVowelSyllableRules: Rule[] =
