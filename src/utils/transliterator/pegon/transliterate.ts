@@ -523,13 +523,13 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["^e^e", Pegon.MaddaAbove + 
         Pegon.Alif + Pegon.MaddaAbove],
     ["ie", Pegon.Kasra + Pegon.Ya +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i^.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i-Ye", Pegon.Kasra +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
 ]
 
 const doubleMonographVowelRulesSunda: PlainRule[] = [
@@ -556,13 +556,13 @@ const doubleMonographVowelForIOAndIE: PlainRule[] = [
     ["i-Yo", Pegon.Kasra +
         Pegon.Ya + Pegon.Fatha + Pegon.Waw],
     ["ie", Pegon.Kasra + Pegon.Ya +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i^.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
     ["i-Ye", Pegon.Kasra +
-        Pegon.Ya + Pegon.Fatha],
+        Pegon.Ya + Pegon.Fatha + Pegon.Ya],
 ]
 
 var doubleMonographVowelRules: PlainRule[] = doubleMonographVowelRulesSunda;
