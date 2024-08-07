@@ -212,8 +212,6 @@ const beginningDigraphVowelRules: PlainRule[] = [
 
 const beginningMonographVowelRules: PlainRule[] = [
     ["`a", Pegon.AlifWithHamzaAbove],
-    ["o", Pegon.Alif + Pegon.Fatha + Pegon.Waw],
-    ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
     ["a", Pegon.Alif + Pegon.Fatha],
     ["i", Pegon.Alif + Pegon.Kasra + Pegon.Ya ],
     ["-i-Y", Pegon.Alif + Pegon.Kasra],
@@ -222,6 +220,11 @@ const beginningMonographVowelRules: PlainRule[] = [
     ["-u-W", Pegon.Alif + Pegon.Damma],
     ["-u", Pegon.Alif + Pegon.Waw],
     ["-a", Pegon.Alif],
+]
+
+const BeginningOAndERules: PlainRule[] = [
+    ["o", Pegon.Alif + Pegon.Fatha + Pegon.Waw],
+    ["e", Pegon.Alif + Pegon.Fatha + Pegon.Ya],
 ]
 
 const beginningIngForDeadConsonantRules: PlainRule[] = [
@@ -299,6 +302,9 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["aa", 
         Pegon.Fatha + Pegon.Alif +
         Pegon.AlifWithHamzaAbove + Pegon.Fatha],
+    ["a-Aa-A", 
+        Pegon.Fatha +
+        Pegon.Alif + Pegon.Fatha],
     ["a-Aa", 
         Pegon.Fatha +
         Pegon.AlifWithHamzaAbove + Pegon.Fatha],
@@ -514,7 +520,15 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["^e`^e", Pegon.MaddaAbove +
         Pegon.YaWithHamzaAbove + Pegon.MaddaAbove],
     ["^e^e", Pegon.MaddaAbove + 
-        Pegon.Alif + Pegon.MaddaAbove]
+        Pegon.Alif + Pegon.MaddaAbove],
+    ["ie", Pegon.Kasra + Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha],
+    ["i^.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
+        Pegon.Ya + Pegon.Fatha],
+    ["i.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Fatha],
+    ["i-Ye", Pegon.Kasra +
+        Pegon.Ya + Pegon.Fatha],
 ]
 
 const doubleMonographVowelRulesSunda: PlainRule[] = [
@@ -527,6 +541,27 @@ const doubleMonographVowelRulesSunda: PlainRule[] = [
     ["a_u", Pegon.MaddaAbove +
         Pegon.Waw +
         Pegon.Sukun],
+]
+
+const doubleMonographVowelForIOAndIE: PlainRule[] = [
+    ["i^.o", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
+    ["i.o", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
+    ["io", Pegon.Kasra + Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
+    ["-io", Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
+    ["i-Yo", Pegon.Kasra +
+        Pegon.Ya + Pegon.Fatha + Pegon.Waw],
+    ["ie", Pegon.Kasra + Pegon.Ya +
+        Pegon.Ya + Pegon.Fatha],
+    ["i^.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
+        Pegon.Ya + Pegon.Fatha],
+    ["i.e", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
+        Pegon.Ya + Pegon.Fatha],
+    ["i-Ye", Pegon.Kasra +
+        Pegon.Ya + Pegon.Fatha],
 ]
 
 var doubleMonographVowelRules: PlainRule[] = doubleMonographVowelRulesSunda;
@@ -1409,7 +1444,7 @@ const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[
 
 const firstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-a|a-A|a))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
+        [new RegExp(`(${key})(.[\^\`'-]?[aiueoUOE][-_]?[aiuYWA]?)(.[\^\`'-]?[aiueoUOE][-_]?[aiuYWA]?)`), `${val}$2$3`])
 
 
 const firstSyllableWithSoundARules: RegexRule[] =
@@ -1516,7 +1551,7 @@ const inverseOneSyllableWithSoundAAsSingleSyllableRules: RegexRule[] =
 
 const inverseFirstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقپڤڤكࢴڮلمنهءئؤݒݘ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴپڮلمنهويءئؤݒݘ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮپلمنهءئݒݘؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدݒݘرپزسعجفقڤڤكࢴڮلمنهويءئؤ](\u0627|\u064E\u0627|\u064E))([ثحخڊࢮڎذشصضطظغڠۑڽࢴپڬڭݢݣؼبتچدرزݒݘسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
+        [new RegExp(`(${key})([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقپڤڤكࢴڮلمنهءئؤݒݘ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴپڮلمنهويءئؤݒݘ]([اويَُِّࣤ]+))([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدرزسعجفقڤڤكࢴڮپلمنهءئݒݘؤ]?[\u0652|\u06E1]?)([ثحخڊࢮڎذشصضطظغڠۑڽࢴڬڭݢݣؼبتچدݒݘرپزسعجفقڤڤكࢴڮلمنهويءئؤ]([اويَُِّࣤ]+))([ثحخڊࢮڎذشصضطظغڠۑڽࢴپڬڭݢݣؼبتچدرزݒݘسعجفقڤڤكࢴڮلمنهءئؤ]?[\u0652|\u06E1]?)`), `${val}$2$3$5$6$8`])
 
 const inverseFirstSyllableWithSoundARules: RegexRule[] =
     inverseFirstSyllableWithSoundA(asInverse(ruleProduct(consonantRules, aForClosedSyllable2)))
@@ -1621,6 +1656,13 @@ const inverseBeginningVowelAsWordBeginningRules: RegexRule[] =
         inverseBeginningIngForDeadConsonantRules,
         inverseBeginningDigraphVowelRules,
         inverseBeginningMonographVowelRules))
+
+const inverseBeginningOAndERules = (rules: PlainRule[]): RegexRule[] =>
+    prepareRules(rules).map<RegexRule>(([key, val]) =>
+        [new RegExp(`^(${key})(?![اَُِّࣤ]|ي?![اويَُِّࣤ]|و?![اويَُِّࣤ])`), `${val}`])
+
+const inverseBeginningOAndEAsWordBeginningRules: RegexRule[] =
+    inverseBeginningOAndERules(asInverse(BeginningOAndERules))
 
 const inverseBeginningIForOpenConsonantRules: PlainRule[] =
     asInverse(beginningIForOpenConsonantRules)
@@ -1753,10 +1795,15 @@ const inverseDoubleVowelAsWordBeginningRules: RegexRule[] =
         ruleProduct([["", Pegon.Alif]], doubleVowelRules)
     ))
 
+const inverseDoubleMonographVowelForIOAndIE: PlainRule[] =
+    asInverse(doubleMonographVowelForIOAndIE)
+
 const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
+        inverseDoubleMonographVowelForIOAndIE,
         inverseDoubleVowelForClosedSyllablAsWordBeginningeRules,
         inverseDoubleVowelAsWordBeginningRules,
+        inverseBeginningOAndEAsWordBeginningRules,
         inverseBeginningVowelAsWordBeginningRules,
         inverseFirstSyllableWithSoundARules,
         inverseSpecialPrepositionAsSingleWordsRules,
