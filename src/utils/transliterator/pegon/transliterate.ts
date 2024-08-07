@@ -1444,14 +1444,14 @@ const transliterateSundaAffixes = (affixes: string[], baseWord: string): string[
 
 const firstSyllableWithSoundA = (rules: PlainRule[]): RegexRule[] =>
     prepareRules(rules).map<RegexRule>(([key, val]) =>
-        [new RegExp(`(${key})(.[\^\`'-]?[aiueoUOE][-_]?[aiuYWA]?)(.[\^\`'-]?[aiueoUOE][-_]?[aiuYWA]?)`), `${val}$2$3`])
+        [new RegExp(`(${key})([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]?(_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ])?(.|^.)?)?([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]?(_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]))([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ](_[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ12345678])?(.|^.)?)?`), `${val}$2$5$8$11$14`])
 
 
 const firstSyllableWithSoundARules: RegexRule[] =
     firstSyllableWithSoundA(ruleProduct(consonantRules, aForClosedSyllable));
 
 const countSyllable = (word: string): number => {
-    const matches = word.match(/(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
+    const matches = word.match(/(-aA|-a|-i|-u|aA|e_u|a_i|a_u|\^e|\`[aiueoAIUEO]|[aiueoAIUEO]){1}/g)
     if (matches)
         return matches.length
     return 0
