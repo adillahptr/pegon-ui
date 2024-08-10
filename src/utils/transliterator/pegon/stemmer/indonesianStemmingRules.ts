@@ -70,7 +70,7 @@ const deleteDerivationalSuffix = (input: string): [string, string[]] => {
 
 const deletePlainPrefix = (input: string): [string, string[]] => {
     //Hapus prefix di-, ke-, se-
-    var regex = /^(di|d-i|k\^e|s\^e)(.*)/
+    var regex = /^(di-Y|di|d-i|k\^e|s\^e)(.*)/
     const matches = input.match(regex)
     if (matches) {
         return [matches[2], [matches[1]+'-'] ]
