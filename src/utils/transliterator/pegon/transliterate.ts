@@ -1872,6 +1872,7 @@ const standardLatinRules: PlainRule[] = [
     ["`u", "u"],
     ["`e", "e"],
     ["`o", "o"],
+    ["`U", "u"],
     ["I", "i"],
     ["Y", "i"],
     ["O", "o"],
