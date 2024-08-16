@@ -646,7 +646,6 @@ const monographConsonantRules: PlainRule[] = [
     // Tambahan konsonan Arab
     ["`_1", Pegon.Hamza],
     ["`", Pegon.YaWithHamzaAbove],
-    //["`", Pegon.WawWithHamzaAbove],
 ]
 
 const digraphConsonantRules: PlainRule[] = [
@@ -1808,6 +1807,7 @@ const standardLatinRules: PlainRule[] = [
     ["-aA", "a"],
     ["aA", "a"],
     ["`_1", "`"],
+    ["`-", "`"],
     ["`^e", "ě"],
     ["^e", "ě"],
     ["^i", "i"],
