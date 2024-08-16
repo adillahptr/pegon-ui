@@ -412,6 +412,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["i-`a", Pegon.Kasra + Pegon.Ya +
         Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["i^.-`a", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["i.-`a", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["i-Yu", Pegon.Kasra +
         Pegon.Ya + Pegon.Damma + Pegon.Waw],
     ["i-Y-u", Pegon.Kasra +
@@ -429,6 +433,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["-i-`u", Pegon.Ya +
         Pegon.YaWithHamzaAbove + Pegon.Waw],
     ["i-`u", Pegon.Kasra + Pegon.Ya +
+        Pegon.YaWithHamzaAbove + Pegon.Waw],
+    ["i^.-`u", Pegon.Kasra + Pegon.Ya + Pegon.Sukun2 +
+        Pegon.YaWithHamzaAbove + Pegon.Waw],
+    ["i.-`u", Pegon.Kasra + Pegon.Ya + Pegon.Sukun +
         Pegon.YaWithHamzaAbove + Pegon.Waw],
     ["i-Yo", Pegon.Kasra +
         Pegon.Ya + Pegon.Fatha + Pegon.Waw],
@@ -456,6 +464,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
         Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["u-`a", Pegon.Damma + Pegon.Waw +
         Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["u^.-`a", Pegon.Damma + Pegon.Waw + Pegon.Sukun2 +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
+    ["u.-`a", Pegon.Damma + Pegon.Waw + Pegon.Sukun +
+        Pegon.YaWithHamzaAbove + Pegon.Alif],
     ["u-Wi", Pegon.Damma +
         Pegon.Waw + Pegon.Kasra + Pegon.Ya],
     ["u-W-i", Pegon.Damma +
@@ -473,6 +485,10 @@ const doubleMonographVowelRulesStandard: PlainRule[] = [
     ["-u-`i", Pegon.Waw +
         Pegon.YaWithHamzaAbove + Pegon.Ya],
     ["u-`i", Pegon.Damma + Pegon.Waw +
+        Pegon.YaWithHamzaAbove + Pegon.Ya],
+    ["u^.-`i", Pegon.Damma + Pegon.Waw + Pegon.Sukun2 +
+        Pegon.YaWithHamzaAbove + Pegon.Ya],
+    ["u.-`i", Pegon.Damma + Pegon.Waw + Pegon.Sukun +
         Pegon.YaWithHamzaAbove + Pegon.Ya],
     ["u-Wo", Pegon.Damma +
         Pegon.Waw + Pegon.Fatha + Pegon.Waw],
