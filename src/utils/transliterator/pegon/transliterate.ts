@@ -571,19 +571,13 @@ const vowelHamzaEndingWithoutSukunRules: PlainRule[] = [
     ["i-Y`i", Pegon.Kasra + Pegon.YaWithHamzaAbove],
     ["u`u", Pegon.Damma + Pegon.Waw + Pegon.WawHamzaAbove],
     ["u-W`u", Pegon.Damma + Pegon.WawHamzaAbove],
-    ["u.`U", Pegon.Damma + Pegon.Waw + Pegon.Sukun + Pegon.Hamza],
-    ["u^.`U", Pegon.Damma + Pegon.Waw + Pegon.Sukun2 + Pegon.Hamza],
-    ["u`U", Pegon.Damma + Pegon.Waw + Pegon.Hamza],
+    ["u.`", Pegon.Damma + Pegon.Waw + Pegon.Sukun + Pegon.Hamza],
+    ["u^.`", Pegon.Damma + Pegon.Waw + Pegon.Sukun2 + Pegon.Hamza],
+    ["u`", Pegon.Damma + Pegon.Waw + Pegon.Hamza],
 ]
 
 const vowelHamzaEndingWithSukunRules: PlainRule[] = 
     ruleProduct(vowelHamzaEndingWithoutSukunRules, sukunRules)
-
-const vowelHamzaEndingRules: PlainRule[] = 
-    chainRule(vowelHamzaEndingWithSukunRules, vowelHamzaEndingWithoutSukunRules)
-
-const vowelHamzaAsWordEndingRules: RegexRule[] =
-    asWordEnding(vowelHamzaEndingRules);
 
 const doubleMonographBeginningSyllableVowelRules: PlainRule[] = [
     ["iu",Pegon.Ya +
@@ -745,6 +739,13 @@ const digraphConsonantRules: PlainRule[] = [
 const consonantRules: PlainRule[] = chainRule(
     digraphConsonantRules,
     monographConsonantRules)
+
+const vowelHamzaEndingRules: PlainRule[] = 
+    ruleProduct(consonantRules,
+        chainRule(vowelHamzaEndingWithSukunRules, vowelHamzaEndingWithoutSukunRules))
+
+const vowelHamzaAsWordEndingRules: RegexRule[] =
+    asWordEnding(vowelHamzaEndingRules);
 
 const withSukun = (rules: PlainRule[]): PlainRule[] =>
     rules.map<PlainRule>(([key, val]) => [key, val.concat(Pegon.Sukun)])
@@ -1910,8 +1911,9 @@ const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
     ["u.`u", "uk"],
     ["-u`u", "uk"],
     ["u-W`u", "uk"],
-    ["u`U", "uk"],
-    ["u.`U", "uk"],
+    ["u`", "uk"],
+    ["u^.`", "uk"],
+    ["u.`", "uk"],
 ]
 
 const changeFaToP: PlainRule[] = [
