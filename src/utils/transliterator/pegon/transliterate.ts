@@ -122,8 +122,14 @@ const enum Pegon {
     Pepet = "\u08e4",
     Shadda = "\u0651",              //  ّ
     Ve = "\u06CB",
+    //Tanwin
+    Fathatan = "\u064B",
+    Dhammatan = "\u064C",
+    Kasratan = "\u064D",
 
-    Space = " "
+    Space = " ",
+    ornateLeftParanthesis = "\uFD3E",
+    ornateRightParanthesis = "\uFD3F"
 }
 
 const punctuationRules: PlainRule[] = [
@@ -789,13 +795,22 @@ const singleVowelSyllableRules: PlainRule[] =
         ruleProduct(consonantRules, monographVowelRules))
 
 const doubleVowelSyllableRules: PlainRule[] =
-        ruleProduct(consonantRules, doubleVowelRules)
+    ruleProduct(consonantRules, doubleVowelRules)
 
 const singleVowelSyllableAsWordEndingRules: RegexRule[] =
     asWordEnding(ruleProduct(consonantRules, singleEndingVowelRules))
 
 const doubleVowelSyllableAsWordEndingRules: RegexRule[] = 
     asWordEnding(ruleProduct(consonantRules, doubleEndingVowelRules))
+
+const tanwinRules: PlainRule[] = [
+    ["a-n", Pegon.Fathatan],
+    ["i-n", Pegon.Kasratan],
+    ["u-n", Pegon.Dhammatan],
+]
+
+const tanwinSyllableRules: PlainRule[] =
+    ruleProduct(consonantRules, tanwinRules)
 
 const prefixRules: PlainRule[] = [
     ["dak", Pegon.Dal + Pegon.Fatha + Pegon.Alif + Pegon.Kaf],
@@ -1468,6 +1483,8 @@ const latinToPegonScheme: Rule[] =
 
         oneSyllableWithSoundAAsSingleSyllableRules,
 
+        tanwinSyllableRules,
+
         closedSyllableWithSoundARules,
         doubleVowelClosedSyllableAsNotBeginningRules,
 
@@ -1787,6 +1804,9 @@ const inverseDoubleVowelAsWordBeginningRules: RegexRule[] =
 const inverseDoubleMonographVowelForIOAndIE: PlainRule[] =
     asInverse(doubleMonographVowelForIOAndIE)
 
+const inverseTanwinSyllableRules: PlainRule[] =
+    asInverse(tanwinSyllableRules)
+
 const initiatePegonToLatinScheme = (): Rule[] => {
     return prepareRules(chainRule<Rule>(
         inverseDoubleMonographVowelForIOAndIE,
@@ -1806,6 +1826,7 @@ const initiatePegonToLatinScheme = (): Rule[] => {
         inverseDoubleEndingVowelAsWordEndingRules,
         inverseFathaHarakatForWawAndYaRules,
         inverseShaddaRules,
+        inverseTanwinSyllableRules,
         inverseSyllableRules,
         inverseConsonantRules,
         inverseVowelRules,
@@ -1897,6 +1918,7 @@ const standardLatinRules: PlainRule[] = [
     ["g_8", "g"],
     ["^A_1", "ā"],
     ["+", ""],
+    ["-n", "n"],
 ];
 
 const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
@@ -1916,8 +1938,28 @@ const vowelHamzaStandardLatinEndingRules: PlainRule[] = [
     ["u.`", "uk"],
 ]
 
+const vowelHamzaStandardLatinEndingRulesMadura: PlainRule[] = [
+    ["a`a", "a`"],
+    ["-a`a", "a`"],
+    ["a-A`a", "a`"],
+    ["i`i", "i`"],
+    ["i.`i", "i`"],
+    ["-i`i", "i`"],
+    ["i-Y`i", "i`"],
+    ["u`u", "u`"],
+    ["u.`u", "u`"],
+    ["-u`u", "u`"],
+    ["u-W`u", "u`"],
+    ["u^.`", "u`"],
+    ["u.`", "u`"],
+]
+
 const changeFaToP: PlainRule[] = [
     ["f", "p"]
+];
+
+const changeQafToK: PlainRule[] = [
+    ["q", "k"]
 ];
 
 const convertToDoubleVowels: PlainRule[] = [
@@ -1943,6 +1985,9 @@ const sukunStandardLatinRules: PlainRule[] = [
 const vowelHamzaStandardLatinAsWordEndingRules: RegexRule[] =
     asWordEnding(vowelHamzaStandardLatinEndingRules)
 
+const vowelHamzaStandardLatinAsWordEndingRulesMadura: RegexRule[] =
+    asWordEnding(vowelHamzaStandardLatinEndingRulesMadura)
+
 const sukunStandardLatinAsWordEndingRules: RegexRule[] =
     asWordEnding(sukunStandardLatinRules)
 
@@ -1954,12 +1999,34 @@ const reversibleToStandardLatinScheme: Rule[] =
         standardLatinRules
 ))
 
+const reversibleToStandardLatinSchemeForMadura: Rule[] =
+    prepareRules(chainRule<Rule>(
+        sukunStandardLatinAsWordEndingRules,
+        vowelHamzaStandardLatinAsWordEndingRulesMadura,
+        soundAAndMaksuraRules,
+        standardLatinRules
+))
+
 export const transliterateReversibleLatinToStandardLatin =
     (reversibleString: string, lang:string): string => {
-        if (lang === 'Jawa' || lang === 'Sunda') {
+        if (lang === 'Jawa') {
             var firstResult = transliterate(
                 transliterate(reversibleString, reversibleToStandardLatinScheme),
-                prepareRules(changeFaToP))
+                prepareRules(chainRule<Rule>(
+                    changeFaToP,
+                    changeQafToK
+                )))
+        } else if (lang === 'Sunda') {
+            var firstResult = transliterate(
+                transliterate(reversibleString, reversibleToStandardLatinScheme),
+                prepareRules(
+                    changeFaToP))
+
+        } else if (lang === 'Madura') {
+            var firstResult = transliterate(
+                transliterate(reversibleString, reversibleToStandardLatinSchemeForMadura),
+                prepareRules(
+                    changeFaToP))
         } else
             var firstResult = transliterate(reversibleString, reversibleToStandardLatinScheme)
 
