@@ -122,10 +122,6 @@ const enum Pegon {
     Pepet = "\u08e4",
     Shadda = "\u0651",              //  ّ
     Ve = "\u06CB",
-    //Tanwin
-    Fathatan = "\u064B",
-    Dhammatan = "\u064C",
-    Kasratan = "\u064D",
 
     Space = " ",
     ornateLeftParanthesis = "\uFD3E",
